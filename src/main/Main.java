@@ -1,6 +1,8 @@
 package main;
 
 
+import com.mysql.cj.jdbc.JdbcConnection;
+import java.sql.*;
 import helper.JDBC;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +37,19 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
+        String sql = "SELECT Create_Date FROM countries";
+        try {
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Timestamp ts = rs.getTimestamp("Create_Date");
+                System.out.println("CD: " + ts.toLocalDateTime().toString());
+            }
+        }
+        catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+
         Inventory.autoIDGen = 2; //Set autoIDGen for new parts/products to start at 2.
         launch(args);
     }

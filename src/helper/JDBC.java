@@ -1,6 +1,7 @@
 package helper;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.DriverManager;
 
 public abstract class JDBC {
@@ -22,10 +23,14 @@ public abstract class JDBC {
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
             System.out.println("Connection successful!");
         }
-        catch(Exception e)
-        {
-            System.out.println("Error:" + e.getMessage());
+        catch(Exception e) {
+            //System.out.println("Error:" + e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    public static Connection getConnection(){
+        return connection;
     }
 
     public static void closeConnection() {
