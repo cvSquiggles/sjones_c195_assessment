@@ -1,6 +1,7 @@
 package main;
 
 
+import DBAccess.DBCountries;
 import com.mysql.cj.jdbc.JdbcConnection;
 import java.sql.*;
 import helper.JDBC;
@@ -37,6 +38,7 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
+        System.out.println(DBCountries.getAllCountries().get(2).getName());
         String sql = "SELECT Create_Date FROM countries";
         try {
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
