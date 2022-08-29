@@ -1,7 +1,5 @@
 package helper;
 
-import model.Users;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,14 +13,17 @@ public class UsersQuery {
 
         ResultSet rs = ps.executeQuery();
 
-        rs.next();
-        username = rs.getString("User_Name");
-        String dbPassword = rs.getString("Password");
+        if(rs.getFetchSize() > 0) {
 
-        System.out.println(dbPassword + " " + password + " " + username);
+            rs.next();
+            username = rs.getString("User_Name");
+            String dbPassword = rs.getString("Password");
 
-        if(dbPassword == password) {
-            return 1;
+            System.out.println(dbPassword + " " + password + " " + username);
+
+            if (dbPassword.contentEquals(password)) {
+                return 1;
+            }
         }
 
         return 0;
