@@ -27,9 +27,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainForm.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
-        stage.setTitle("Inventory Management System");
+        stage.setTitle("Scheduling Manager v0.1");
         stage.setScene(new Scene(root, 1200, 600));
         stage.show();
     }
