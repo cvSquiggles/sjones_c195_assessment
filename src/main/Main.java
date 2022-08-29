@@ -6,10 +6,12 @@ import com.mysql.cj.jdbc.JdbcConnection;
 import java.sql.*;
 import helper.JDBC;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Countries;
 import model.Inventory;
 
 /**
@@ -38,7 +40,8 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
-        System.out.println(DBCountries.getAllCountries().get(2).getName());
+        ObservableList<Countries> countryList = DBCountries.getAllCountries();
+        System.out.println(countryList.get(2).getName());
         String sql = "SELECT Create_Date FROM countries";
         try {
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -54,6 +57,7 @@ public class Main extends Application {
 
         Inventory.autoIDGen = 2; //Set autoIDGen for new parts/products to start at 2.
         launch(args);
+        JDBC.closeConnection();
     }
 
 }
