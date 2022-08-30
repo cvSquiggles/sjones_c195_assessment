@@ -3,8 +3,14 @@ package controller;
 import helper.AppointmentsQuery;
 import helper.UsersQuery;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import model.Users;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -47,13 +53,25 @@ public class LogInFormController implements Initializable {
                 alert.setTitle("Log in failed.");
                 alert.setContentText("Invalid credentials entered.");
                 alert.show();
+                usernameTextField.setText("");
+                passwordTextField.setText("");
                 break;
             case 1:
                 System.out.println("This is correct!");
-                currentUser = usernameTextField.getText();
+                Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root, 1200.0, 600.0);
+                stage.setTitle("Home Page");
+                stage.setScene(scene);
+                stage.show();
                 break;
             default:
-                System.out.println("An unknown error has occurred.");
+                Alert alertDefault = new Alert(Alert.AlertType.ERROR);
+                alertDefault.setTitle("Log in failed.");
+                alertDefault.setContentText("An unknown error has occurred..");
+                alertDefault.show();
+                usernameTextField.setText("");
+                passwordTextField.setText("");
         }
 
         /*int qCheck = AppointmentsQuery.insert("Title", "The description", "Place", "Cult", currentUser, 2, 1, 2);

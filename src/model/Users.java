@@ -5,6 +5,7 @@ public class Users {
     private String userName;
     private String password;
     private String createdBy;
+    public static String currentUser;
 
     public Users(int id, String userName, String password, String createdBy){
         this.id = id;

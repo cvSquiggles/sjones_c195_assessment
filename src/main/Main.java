@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Countries;
 import model.Inventory;
+import model.Users;
 
 /**
  * Javadoc files located in C:\School\intelliJ_projects\sjones_c482_assessment\javadoc
@@ -40,7 +41,7 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
-        ObservableList<Countries> countryList = DBCountries.getAllCountries();
+        /*ObservableList<Countries> countryList = DBCountries.getAllCountries();
         System.out.println(countryList.get(2).getName());
         String sql = "SELECT Create_Date FROM countries";
         try {
@@ -53,9 +54,10 @@ public class Main extends Application {
         }
         catch (SQLException throwables){
             throwables.printStackTrace();
-        }
+        }*/
 
         Inventory.autoIDGen = 2; //Set autoIDGen for new parts/products to start at 2.
+        Users.currentUser = "";
         launch(args);
         JDBC.closeConnection();
     }
