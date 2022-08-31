@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 public class AppointmentsQuery {
 
-    public static ResultSet select(int appointmentID) throws SQLException {
+    public static ResultSet select() throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
                 "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                 "FROM appointments as a " +
@@ -15,6 +15,23 @@ public class AppointmentsQuery {
                 "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
                 "JOIN Contacts as co on a.Contact_ID = co.Contact_ID ";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ResultSet rs = ps.executeQuery();
+
+        return rs;
+    }
+
+    public static ResultSet select(int appointmentID) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
+                "WHERE a.Appointment_ID = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setInt(1, appointmentID);
 
         ResultSet rs = ps.executeQuery();
 

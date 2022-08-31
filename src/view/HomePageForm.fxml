@@ -40,7 +40,7 @@
                                             <children>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                     <children>
-                                          <Label fx:id="welcomeUserLabel" onDragDetected="#onActionWelcomeUserLabel" text="Welcome Error - Failed to aqcuire username. | ">
+                                          <Label fx:id="welcomeUserLabel" text="Welcome Error - Failed to aqcuire username. | ">
                                              <font>
                                                 <Font size="14.0" />
                                              </font></Label>
