@@ -58,7 +58,6 @@ public class CustomersViewFormController implements Initializable{
         try {
             ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
 
-            System.out.println(customerList.get(1).getID());
             idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));

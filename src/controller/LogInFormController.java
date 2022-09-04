@@ -1,6 +1,8 @@
 package controller;
 
 import helper.AppointmentsQuery;
+import helper.CountriesQuery;
+import helper.FirstLevelDivisionsQuery;
 import helper.UsersQuery;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Countries;
+import model.FirstLevelDivisions;
 import model.Users;
 
 import java.io.IOException;
@@ -31,11 +35,33 @@ public class LogInFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Locale myLocale = Locale.getDefault();
+        //Get currentUserData
+        Users.currentUserLocale = Locale.getDefault();
         Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
+        //Set language package
+        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", Users.currentUserLocale);
 
-        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", myLocale);
+        //Populate Countries
+        try {
+            Countries.countryOptions = CountriesQuery.select();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Populate First-Level Divisions Data
+        try {
+            FirstLevelDivisions.divisionOptions = FirstLevelDivisionsQuery.select();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*int i = 0;
+        while(i < FirstLevelDivisions.divisionOptions.size()){
+            if (FirstLevelDivisions.divisionOptions.get(i).getCountryID() == 2)
+                System.out.println(FirstLevelDivisions.divisionOptions.get(i).getDivision());
+            i++;
+        }*/
     }
 
     /**

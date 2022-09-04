@@ -11,6 +11,7 @@ public class Users {
     private String createdBy;
     public static String currentUser;
     public static ZoneId currentUserZoneID;
+    public static Locale currentUserLocale;
     public static ResourceBundle currentUserRB;
 
     public Users(int id, String userName, String password, String createdBy){

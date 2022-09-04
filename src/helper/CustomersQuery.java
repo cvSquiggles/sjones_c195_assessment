@@ -22,7 +22,7 @@ public class CustomersQuery {
         while(rs.next()){
             Customers customerValue = new Customers(rs.getInt("Customer_ID"), rs.getString("Customer_Name"),
                     rs.getString("Address"), rs.getString("Postal_Code"), rs.getString("Phone"),
-                    rs.getInt("Division_ID") ,rs.getString("Division"));
+                    rs.getString("Created_By"), rs.getInt("Division_ID") ,rs.getString("Division"));
 
             customerList.add(customerValue);
         }

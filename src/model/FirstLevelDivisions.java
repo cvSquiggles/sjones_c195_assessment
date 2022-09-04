@@ -1,24 +1,25 @@
 package model;
 
+import helper.FirstLevelDivisionsQuery;
+import javafx.collections.ObservableList;
+
 public class FirstLevelDivisions {
 
     private int id;
     private String division;
-    private String createdBy;
     private int countryID;
+    public static ObservableList<FirstLevelDivisions> divisionOptions;
+    public static ObservableList<FirstLevelDivisions> divisionOptionsFiltered;
 
-    public FirstLevelDivisions(int id, String division, String createdBy, int countryID){
+    public FirstLevelDivisions(int id, String division, int countryID){
         this.id = id;
         this.division = division;
-        this.createdBy = createdBy;
         this.countryID = countryID;
     }
 
     public int getId() {return id;}
 
     public String getDivision() {return division;}
-
-    public String getCreatedBy() {return createdBy;}
 
     public int getCountryID() {return countryID;}
 }

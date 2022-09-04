@@ -13,12 +13,13 @@ public class Customers {
     private int divisionID;
     private String division;
 
-    public Customers(int ID, String name, String address, String postalCode, String phone, int divisionID, String division){
+    public Customers(int ID, String name, String address, String postalCode, String phone, String createdBy, int divisionID, String division){
         this.ID = ID;
         this.name = name;
         this.address = address;
         this.postalCode = postalCode;
         this.phone = phone;
+        this.createdBy = createdBy;
         this.divisionID = divisionID;
         this.division = division;
     }
