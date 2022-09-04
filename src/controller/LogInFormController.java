@@ -32,8 +32,10 @@ public class LogInFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale myLocale = Locale.getDefault();
-        ZoneId myTimeZoneID = TimeZone.getDefault().toZoneId();
-        timeZoneLabel.setText(myTimeZoneID.toString());
+        Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", myLocale);
     }
 
     /**

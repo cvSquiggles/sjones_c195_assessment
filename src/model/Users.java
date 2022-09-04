@@ -1,11 +1,17 @@
 package model;
 
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 public class Users {
     private int id;
     private String userName;
     private String password;
     private String createdBy;
     public static String currentUser;
+    public static ZoneId currentUserZoneID;
+    public static ResourceBundle currentUserRB;
 
     public Users(int id, String userName, String password, String createdBy){
         this.id = id;

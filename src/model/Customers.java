@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Customers {
-    private int id;
+    private int ID;
     private String name;
     private String address;
     private String postalCode;
@@ -13,8 +13,8 @@ public class Customers {
     private int divisionID;
     private String division;
 
-    public Customers(int id, String name, String address, String postalCode, String phone, int divisionID, String division){
-        this.id = id;
+    public Customers(int ID, String name, String address, String postalCode, String phone, int divisionID, String division){
+        this.ID = ID;
         this.name = name;
         this.address = address;
         this.postalCode = postalCode;
@@ -23,7 +23,7 @@ public class Customers {
         this.division = division;
     }
 
-    public int getID() {return id;}
+    public int getID() {return ID;}
 
     public String getName() {return name;}
 

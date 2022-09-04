@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Users;
@@ -16,8 +17,17 @@ import java.util.ResourceBundle;
 
 public class AddCustomerFormController implements Initializable {
 
+    public TextField nameTextField;
+    public TextField addressTextField;
+    public TextField zipTextField;
+    public TextField phoneTextField;
+    public ComboBox countryComboBox;
+    public ComboBox divisionComboBox;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        Users.currentUserZoneID.ge
 
     }
 

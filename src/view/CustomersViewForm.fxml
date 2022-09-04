@@ -39,9 +39,10 @@
                                             <children>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                     <children>
-                                          <Label fx:id="currentUser" text="Current User: Error - User unknown | " />
-                                                        <Label text="Your Time Zone: " />
-                                          <Label fx:id="currentTimeZone" text="Error - Timezone unknown" />                                                    </children>
+                                          <Label fx:id="currentUserLabel_customersView" text="Current User: Error - User unknown | " />
+                                          <Label text="Your Time Zone: " />
+                                          <Label fx:id="timeZoneLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" text="Error - Failed to ascertain time zone."/>
+                                                    </children>
                                                 </HBox>
                                             </children>
                                         </StackPane>

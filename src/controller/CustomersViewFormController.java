@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 import model.Customers;
 import model.Users;
 
-import java.awt.Label;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +41,8 @@ public class CustomersViewFormController implements Initializable{
     public TableColumn postalCodeColumn;
     public TableColumn phoneColumn;
     public TableColumn divisionColumn;
+    public Label timeZoneLabel;
+    public Label currentUserLabel_customersView;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,16 +50,16 @@ public class CustomersViewFormController implements Initializable{
         //Set time zone
         Locale myLocale = Locale.getDefault();
         ZoneId myTimeZoneID = TimeZone.getDefault().toZoneId();
-        //currentTimeZone.setText(myTimeZoneID.toString());
+        timeZoneLabel.setText(myTimeZoneID.toString());
 
         //Set username display
-        //currentUser.setText("Welcome " + Users.currentUser + " | ");
+        //currentUserLabel_customersView.setText("Welcome " + Users.currentUser + " | ");
 
         try {
             ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
 
             System.out.println(customerList.get(1).getID());
-            //idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
             postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
