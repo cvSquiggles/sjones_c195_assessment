@@ -41,7 +41,7 @@
                                                     <children>
                                           <Label fx:id="currentUserLabel_customersView" text="Current User: Error - User unknown | " />
                                           <Label text="Your Time Zone: " />
-                                          <Label fx:id="timeZoneLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" text="Error - Failed to ascertain time zone."/>
+                                          <Label fx:id="timeZoneLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" text="Error - Failed to ascertain time zone." />
                                                     </children>
                                                 </HBox>
                                             </children>
@@ -59,7 +59,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="142.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <TableView fx:id="customersTable" prefHeight="481.0" prefWidth="900.0">
+                  <TableView fx:id="customersTable" onMouseClicked="#onMouseClickCustomerTable" prefHeight="481.0" prefWidth="900.0">
                     <columns>
                         <TableColumn fx:id="idColumn" prefWidth="51.0" text="ID" />
                       <TableColumn fx:id="nameColumn" prefWidth="165.0" text="Name" />

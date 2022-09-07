@@ -105,9 +105,14 @@ public class CustomersViewFormController implements Initializable{
     }
 
     public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
+        //Display an alert requesting delete confirmation.
+        if(customersTable.getSelectionModel().isEmpty()) {
+            return;
+        }
+
+        //Get the selected customer from the table
         Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
 
-        //Display an alert requesting delete confirmation.
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Customer selected for deletion.");
         alert.setContentText("Are you sure you want to delete this customer?");
@@ -116,6 +121,19 @@ public class CustomersViewFormController implements Initializable{
         alert.getButtonTypes().setAll(yesButton, cancelButton);
         alert.showAndWait().ifPresent(type -> {
             if (type.getText() == "Yes") {
+                try {
+                    ResultSet rs = AppointmentsQuery.selectByClient(selectedCustomer.getID());
+
+                    if(rs.next()){
+                        Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                        alert2.setTitle("This client has appointments in the system.");
+                        alert2.setContentText("All appointments associated with a client must be deleted before a client can be removed from the system.");
+                        alert2.show();
+                        return;
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
                 //Delete the customer from the customers table.
                 try {
                     int rowsReturned = CustomersQuery.deleteCustomer(selectedCustomer.getID());
@@ -140,6 +158,15 @@ public class CustomersViewFormController implements Initializable{
 
 
     public void onActionEditButton(ActionEvent actionEvent) {
+        if (customersTable.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Customer Edit Error");
+            alert.setContentText("No customer was selected from the list.");
+            alert.show();
+            return;
+        }
+
+
     }
 
     public void onActionAddButton(ActionEvent actionEvent) throws IOException {
@@ -153,5 +180,27 @@ public class CustomersViewFormController implements Initializable{
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void onMouseClickCustomerTable(MouseEvent mouseEvent) {
+        /*if(customersTable.getSelectionModel().isEmpty()) {
+            return;
+        }
+
+        //Get the selected customer from the table
+        Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
+
+        try {
+            ResultSet rs = AppointmentsQuery.selectByClient(selectedCustomer.getID());
+            if(rs.next()){
+                Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                alert2.setTitle("This client has appointments in the system.");
+                alert2.setContentText("All appointments associated with a client must be deleted before a client can be removed from the system.");
+                alert2.show();
+                return;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 }
