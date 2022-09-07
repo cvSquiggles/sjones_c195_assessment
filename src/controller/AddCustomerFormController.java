@@ -1,5 +1,6 @@
 package controller;
 
+import helper.CustomersQuery;
 import helper.FirstLevelDivisionsQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Countries;
+import model.Customers;
 import model.FirstLevelDivisions;
 import model.Users;
 
@@ -72,14 +74,41 @@ public class AddCustomerFormController implements Initializable {
 
     }
 
-    public void onActionCreateButton(ActionEvent actionEvent) {
+    public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
+        if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(), Users.currentUser, divisionComboBox.getSelectionModel().getSelectedItem().toString()) != 0){
+
+            Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
+
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root, 1200.0, 600.0);
+            stage.setTitle("Customers Page");
+
+            stage.setScene(scene);
+            stage.show();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unable to add customer with the provided information!");
+            alert.setContentText("Something must be wrong.");
+            alert.show();
+        }
     }
 
-    public void onActionCancelButton(ActionEvent actionEvent) {
+    public void onActionCancelButton(ActionEvent actionEvent) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
+
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Customers Page");
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
-        Users.currentUser = "";
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 

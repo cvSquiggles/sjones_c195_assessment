@@ -18,6 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Customers;
+import model.Inventory;
+import model.Product;
 import model.Users;
 
 import java.io.IOException;
@@ -102,8 +104,40 @@ public class CustomersViewFormController implements Initializable{
         stage.show();
     }
 
-    public void onActionDeleteButton(ActionEvent actionEvent) {
+    public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
+        Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
+
+        //Display an alert requesting delete confirmation.
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Customer selected for deletion.");
+        alert.setContentText("Are you sure you want to delete this customer?");
+        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, cancelButton);
+        alert.showAndWait().ifPresent(type -> {
+            if (type.getText() == "Yes") {
+                //Delete the customer from the customers table.
+                try {
+                    int rowsReturned = CustomersQuery.deleteCustomer(selectedCustomer.getID());
+                    if (rowsReturned != 0) {
+                        ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
+                        customersTable.setItems(customerList);
+                    } else {
+                        Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                        alert2.setTitle("Unable to add customer with the provided information!");
+                        alert2.setContentText("Something must be wrong.");
+                        alert2.show();
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else{
+                return;
+            }
+        });
     }
+
 
     public void onActionEditButton(ActionEvent actionEvent) {
     }
