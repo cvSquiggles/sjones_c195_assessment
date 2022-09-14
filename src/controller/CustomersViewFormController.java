@@ -91,7 +91,6 @@ public class CustomersViewFormController implements Initializable{
     }
 
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
-        Users.currentUser = "";
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 

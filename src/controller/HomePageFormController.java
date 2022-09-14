@@ -75,7 +75,12 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
-    public void onActionAppointmentsButton(ActionEvent actionEvent) {
+    public void onActionAppointmentsButton(ActionEvent actionEvent) throws IOException {Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Appointments");
+        stage.setScene(scene);
+        stage.show();
     }
 
 }
