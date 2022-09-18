@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-public class AppointmentsViewFormController implements Initializable{
+public class AppointmentsViewFormController implements Initializable {
     public Label timeZoneLabel;
     public Label currentUserLabel_customersView;
     public TableColumn idColumn;
@@ -43,7 +43,10 @@ public class AppointmentsViewFormController implements Initializable{
     public TableColumn customerIDColumn;
     public TableColumn userIDColumn;
     public TableView appointmentsTable;
-
+    public int dateOffset;
+    public RadioButton weekRadio;
+    public ToggleGroup weekMonthToggle;
+    public RadioButton monthRadio;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -53,8 +56,11 @@ public class AppointmentsViewFormController implements Initializable{
         ZoneId myTimeZoneID = TimeZone.getDefault().toZoneId();
         timeZoneLabel.setText(myTimeZoneID.toString());
 
+        //Ensure dateOffset is reset
+        dateOffset = 0;
+
         try {
-            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsList();
+            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset);
 
             idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
             titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -78,7 +84,7 @@ public class AppointmentsViewFormController implements Initializable{
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
         Scene scene = new Scene(root, 1200.0, 600.0);
         stage.setTitle("Scheduling Manager v0.1");
@@ -91,7 +97,7 @@ public class AppointmentsViewFormController implements Initializable{
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
         Scene scene = new Scene(root, 1200.0, 600.0);
         stage.setTitle("Home Page");
@@ -109,8 +115,17 @@ public class AppointmentsViewFormController implements Initializable{
 
     }
 
-    public void onActionAddButton(ActionEvent actionEvent) throws IOException {
+    public void onActionAddButton(ActionEvent actionEvent) throws IOException, SQLException {
+        //Load the Add Customer form.
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AddAppointmentViewForm.fxml"));
 
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Add Appointment");
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
@@ -133,5 +148,69 @@ public class AppointmentsViewFormController implements Initializable{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }*/
+    }
+
+    public void onActionWeekRadio(ActionEvent actionEvent) {
+        try {
+            dateOffset = 0;
+            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset);
+            appointmentsTable.setItems(appointmentList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void onActionMonthRadio(ActionEvent actionEvent) {
+        try {
+            dateOffset = 0;
+            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset);
+            appointmentsTable.setItems(appointmentList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void onActionPrevButton(ActionEvent actionEvent) {
+        if (weekRadio.isSelected()) {
+            try {
+                dateOffset = dateOffset - 1;
+                System.out.println(dateOffset);
+                ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset);
+                appointmentsTable.setItems(appointmentList);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                dateOffset = dateOffset - 1;
+                System.out.println(dateOffset);
+                ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset);
+                appointmentsTable.setItems(appointmentList);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void onActionNextButton(ActionEvent actionEvent) {
+        if (weekRadio.isSelected()) {
+            try {
+                dateOffset = dateOffset + 1;
+                System.out.println(dateOffset);
+                ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset);
+                appointmentsTable.setItems(appointmentList);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                dateOffset = dateOffset + 1;
+                System.out.println(dateOffset);
+                ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset);
+                appointmentsTable.setItems(appointmentList);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
