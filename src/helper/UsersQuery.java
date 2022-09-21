@@ -23,13 +23,13 @@ public class UsersQuery {
                 System.out.println(dbPassword + " " + password + " " + username);
 
                 if (dbPassword.contentEquals(password)) {
-                    Users.currentUser = username;
+                    Users.currentUser = new Users(rs.getInt("User_ID"), rs.getString("User_Name"), rs.getString("Password"), rs.getString("Created_By"));
                     return 1;
                 }
             }
         }
-        catch(SQLException throwables){
-            throwables.printStackTrace();
+        catch(SQLException throwable){
+            throwable.printStackTrace();
             return 0;
         }
 

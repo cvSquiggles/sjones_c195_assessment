@@ -38,7 +38,13 @@ public class LogInFormController implements Initializable {
         //Get currentUserData
         Users.currentUserLocale = Locale.getDefault();
         Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = localDateTime.atZone(Users.currentUserZoneID);
+        Users.currentUserTimeZone = zonedDateTime.getOffset();
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        System.out.println(Users.currentUserTimeZone);
+
         //Set language package
         Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", Users.currentUserLocale);
 

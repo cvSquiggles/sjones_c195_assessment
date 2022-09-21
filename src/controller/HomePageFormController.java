@@ -43,11 +43,11 @@ public class HomePageFormController implements Initializable{
         timeZoneLabel.setText(myTimeZoneID.toString());
 
         //Set username display
-        welcomeUserLabel.setText("Current User: " + Users.currentUser + " | ");
+        welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
-        Users.currentUser = "";
+        Users.currentUser = null;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 

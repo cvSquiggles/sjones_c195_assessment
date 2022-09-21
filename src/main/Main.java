@@ -4,6 +4,8 @@ package main;
 import DBAccess.DBCountries;
 import com.mysql.cj.jdbc.JdbcConnection;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+
 import helper.JDBC;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -41,23 +43,10 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
-        /*ObservableList<Countries> countryList = DBCountries.getAllCountries();
-        System.out.println(countryList.get(2).getName());
-        String sql = "SELECT Create_Date FROM countries";
-        try {
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Timestamp ts = rs.getTimestamp("Create_Date");
-                System.out.println("CD: " + ts.toLocalDateTime().toString());
-            }
-        }
-        catch (SQLException throwables){
-            throwables.printStackTrace();
-        }*/
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Inventory.autoIDGen = 2; //Set autoIDGen for new parts/products to start at 2.
-        Users.currentUser = "";
+        Users.currentUser = null;
         launch(args);
         JDBC.closeConnection();
     }

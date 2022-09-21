@@ -164,9 +164,9 @@ public class AppointmentsQuery {
         ps.setString(3, location);
         ps.setString(4, type);
         ps.setString(5, createdBy);
-        ps.setInt(6, 1);
-        ps.setInt(7, 1);
-        ps.setInt(8, 1);
+        ps.setInt(6, customerID);
+        ps.setInt(7, userID);
+        ps.setInt(8, contactID);
 
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;

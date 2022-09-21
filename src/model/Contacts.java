@@ -1,6 +1,7 @@
 package model;
 
 import helper.JDBC;
+import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,7 @@ public class Contacts {
     private String name;
 
     private String email;
+    public static ObservableList<Contacts> contactOptions;
 
     public Contacts(int id, String name, String email){
         this.id = id;

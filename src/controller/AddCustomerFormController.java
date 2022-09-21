@@ -75,7 +75,7 @@ public class AddCustomerFormController implements Initializable {
     }
 
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
-        if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(), Users.currentUser, divisionComboBox.getSelectionModel().getSelectedItem().toString()) != 0){
+        if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(), Users.currentUser.getUserName(), divisionComboBox.getSelectionModel().getSelectedItem().toString()) != 0){
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
 
@@ -122,7 +122,7 @@ public class AddCustomerFormController implements Initializable {
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
-        Users.currentUser = "";
+        Users.currentUser = null;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 

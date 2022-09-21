@@ -38,8 +38,8 @@
                                  <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                        <children>
-                                          <Label text="Your Time Zone: " />
-                                          <Label fx:id="timeZoneLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" text="Error - Failed to ascertain time zone." />
+                                          <Label text="Location: " />
+                                          <Label fx:id="timeZoneLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" text="Error - Failed to ascertain location." />
                                        </children>
                                     </HBox>
                                  </children>

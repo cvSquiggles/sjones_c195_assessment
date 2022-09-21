@@ -12,6 +12,7 @@ public class Customers {
     private String createdBy;
     private int divisionID;
     private String division;
+    public static ObservableList<Customers> customerOptions;
 
     public Customers(int ID, String name, String address, String postalCode, String phone, String createdBy, int divisionID, String division){
         this.ID = ID;

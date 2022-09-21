@@ -77,7 +77,7 @@ public class CustomersViewFormController implements Initializable{
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
-        Users.currentUser = "";
+        Users.currentUser = null;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 

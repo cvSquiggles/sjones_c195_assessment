@@ -71,16 +71,16 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="142.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <TableView fx:id="appointmentsTable" onMouseClicked="#onMouseClickAppointmentsTable" prefHeight="481.0" prefWidth="900.0">
+                        <TableView fx:id="appointmentsTable" layoutX="-105.0" onMouseClicked="#onMouseClickAppointmentsTable" prefHeight="481.0" prefWidth="1101.0">
                             <columns>
-                                <TableColumn fx:id="idColumn" prefWidth="30.0" text="ID" />
+                                <TableColumn fx:id="idColumn" prefWidth="40.0" text="ID" />
                                 <TableColumn fx:id="titleColumn" prefWidth="100.0" text="Title" />
-                                <TableColumn fx:id="descriptionColumn" prefWidth="205.0" text="Description" />
-                                <TableColumn fx:id="locationColumn" minWidth="0.0" prefWidth="100.0" text="Location" />
-                        <TableColumn fx:id="contactColumn" prefWidth="100.0" text="Contact" />
-                                <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
-                                <TableColumn fx:id="startColumn" prefWidth="70.0" text="Start" />
-                        <TableColumn fx:id="endColumn" prefWidth="70.0" text="End" />
+                                <TableColumn fx:id="descriptionColumn" prefWidth="225.0" text="Description" />
+                                <TableColumn fx:id="locationColumn" minWidth="0.0" prefWidth="125.0" text="Location" />
+                        <TableColumn fx:id="contactColumn" prefWidth="110.0" text="Contact" />
+                                <TableColumn fx:id="typeColumn" prefWidth="100.0" text="Type" />
+                                <TableColumn fx:id="startColumn" prefWidth="125.0" text="Start" />
+                        <TableColumn fx:id="endColumn" prefWidth="125.0" text="End" />
                         <TableColumn fx:id="customerIDColumn" minWidth="50.0" prefWidth="75.0" text="Customer ID" />
                         <TableColumn fx:id="userIDColumn" prefWidth="75.0" text="User ID" />
                             </columns>
