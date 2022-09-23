@@ -140,7 +140,6 @@ public class AddCustomerFormController implements Initializable {
     }
 
     public void onActionCountryComboBox(ActionEvent actionEvent) throws SQLException {
-        System.out.println(countryComboBox.getSelectionModel().getSelectedItem().toString());
         int i = 0;
         divisionOptionsComboList.clear();
         FirstLevelDivisions.divisionOptionsFiltered = FirstLevelDivisionsQuery.select(countryComboBox.getSelectionModel().getSelectedItem().toString());
@@ -153,6 +152,8 @@ public class AddCustomerFormController implements Initializable {
             }
             i++;
         }
+
+        divisionComboBox.getSelectionModel().clearSelection();
     }
 
     public void onActionWelcomeUserLabel(MouseEvent mouseEvent) {

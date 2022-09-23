@@ -156,7 +156,7 @@ public class CustomersViewFormController implements Initializable{
     }
 
 
-    public void onActionEditButton(ActionEvent actionEvent) throws IOException {
+    public void onActionEditButton(ActionEvent actionEvent) throws IOException, SQLException {
         if (customersTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Customer Edit Error");
@@ -172,8 +172,7 @@ public class CustomersViewFormController implements Initializable{
             }
 
             customerToEdit(selectedCustomer);
-            System.out.println(selectedCustomer.getID());
-            //Load edit customer Form.
+            EditCustomerFormController.customerCountryDiv(CustomersQuery.selectCountryDiv(selectedCustomer.getDivisionID()));
             Parent root = FXMLLoader.load(getClass().getResource("/view/EditCustomerForm.fxml"));
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(root, 1200.0, 600.0);
