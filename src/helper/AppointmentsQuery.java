@@ -40,7 +40,8 @@ public class AppointmentsQuery {
         String sql;
         if (weekOffSet >= 0) {
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update," +
+                    " a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
                     "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
@@ -49,7 +50,8 @@ public class AppointmentsQuery {
         }
         else{
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                    "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
                     "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
@@ -77,7 +79,8 @@ public class AppointmentsQuery {
 
     public static ObservableList<Appointments> selectAppointmentsListMonth(int monthOffset) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                 "FROM appointments as a " +
                 "JOIN Users as u on a.User_ID = u.User_ID " +
                 "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
@@ -152,21 +155,28 @@ public class AppointmentsQuery {
         return rs;
     }
 
-    public static int insert(String title, String description, String location, String type, String createdBy,
+    public static int insert(String title, String description, String location, String type, String start, String end, String timeZoneOffset,String createdBy,
                              int customerID, int userID, int contactID) throws SQLException{
-        String sql = "INSERT INTO appointments (Title, Description," +
-                "Location, Type, Create_Date ,Created_By, Last_Update ,Customer_ID, User_ID, Contact_ID) " +
-                "VALUES (?, ?, ?, ?, current_timestamp(), ?, current_timestamp(), ?, ?, ?)";
+        String sql = "INSERT INTO appointments(Title, Description, Location, Type, Start, End, Create_Date," +
+                " Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID)" +
+                " VALUES( ?, ?, ?, ?, convert_tz(?, ?, '+00:00')," +
+                " CONVERT_TZ(?, ?, '+00:00'), current_timestamp(), ?, current_timestamp(), ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setString(1, title);
         ps.setString(2, description);
         ps.setString(3, location);
         ps.setString(4, type);
-        ps.setString(5, createdBy);
-        ps.setInt(6, customerID);
-        ps.setInt(7, userID);
-        ps.setInt(8, contactID);
+        ps.setString(5, start);
+        ps.setString(6, timeZoneOffset);
+        ps.setString(7, end);
+        ps.setString(8, timeZoneOffset);
+        ps.setString(9, createdBy);
+        ps.setString(10, createdBy);
+        ps.setInt(11, customerID);
+        ps.setInt(12, userID);
+        ps.setInt(13, contactID);
+
 
         int rowsAffected = ps.executeUpdate();
         return rowsAffected;

@@ -176,25 +176,76 @@ public class AddAppointmentFormController implements Initializable {
             return;
         }
 
-        //Get customerID and contact ID
+        try{
+            String title = titleTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Title entry error!");
+            alert.setContentText("Please enter a valid title.");
+            alert.show();
+            return;
+        }
+
+        try{
+            String title = descriptionTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Description entry error!");
+            alert.setContentText("Please enter a valid description.");
+            alert.show();
+            return;
+        }
+
+        try{
+            String title = locationTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Location entry error!");
+            alert.setContentText("Please enter a valid location.");
+            alert.show();
+            return;
+        }
+
+        try{
+            String title = typeTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Type entry error!");
+            alert.setContentText("Please enter a valid type.");
+            alert.show();
+            return;
+        }
+
+        //Get form data
         int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
         int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
+        int userID = Users.currentUser.getId();
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
+        String currentUser = Users.currentUser.getUserName();
+        String title = titleTextField.getText();
+        String desc = descriptionTextField.getText();
+        String loc = locationTextField.getText();
+        String type = typeTextField.getText();
+
 
         //Get start date/time stamp
         if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
             startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
                     "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                     ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            System.out.println(startDateTime);
+            //System.out.println(startDateTime);
         }
         else{
             startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
                     "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                     ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            System.out.println(startDateTime);
+            //System.out.println(startDateTime);
         }
 
         //Get end date/time stamp
@@ -202,25 +253,27 @@ public class AddAppointmentFormController implements Initializable {
             endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
                     "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            System.out.println(endDateTime);
+            //System.out.println(endDateTime);
         }
         else{
             endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
                     "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            System.out.println(endDateTime);
+            //System.out.println(endDateTime);
         }
 
+        //System.out.println("User ID: "+ userID + "Contact ID: "+ contactID + "Customer ID: "+ customerID);
+        //System.out.println(timeZoneOffset);
 
-        /*if (AppointmentsQuery.insert(titleTextField.getText(), descriptionTextField.getText(), locationTextField.getText(),
-                typeTextField.getText(), Users.currentUser.getUserName(), customerID, Users.currentUser.getId(), contactID) != 0){
 
-            Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
+        if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID, Users.currentUser.getId(), contactID) != 0){
+
+            Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewFormController.fxml"));
 
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
             Scene scene = new Scene(root, 1200.0, 600.0);
-            stage.setTitle("Customers Page");
+            stage.setTitle("Appointments page");
 
             stage.setScene(scene);
             stage.show();
@@ -230,6 +283,6 @@ public class AddAppointmentFormController implements Initializable {
             alert.setTitle("Unable to add appointment with the provided information!");
             alert.setContentText("Something must be wrong.");
             alert.show();
-        }*/
+        }
     }
 }

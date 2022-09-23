@@ -17,10 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import model.Customers;
-import model.Inventory;
-import model.Product;
-import model.Users;
+import model.*;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -31,6 +28,9 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
+import static controller.EditCustomerFormController.customerToEdit;
+
+import static controller.ModifyPartFormController.partToChange;
 
 public class CustomersViewFormController implements Initializable{
 
@@ -156,7 +156,7 @@ public class CustomersViewFormController implements Initializable{
     }
 
 
-    public void onActionEditButton(ActionEvent actionEvent) {
+    public void onActionEditButton(ActionEvent actionEvent) throws IOException {
         if (customersTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Customer Edit Error");
@@ -164,7 +164,23 @@ public class CustomersViewFormController implements Initializable{
             alert.show();
             return;
         }
+        else {
+            //Get the selected part and pass it to the ModifyPartForm with partToChange().
+            Customers selectedCustomer = (Customers)customersTable.getSelectionModel().getSelectedItem();
+            if (selectedCustomer == null) {
+                return;
+            }
 
+            customerToEdit(selectedCustomer);
+            System.out.println(selectedCustomer.getID());
+            //Load edit customer Form.
+            Parent root = FXMLLoader.load(getClass().getResource("/view/EditCustomerForm.fxml"));
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1200.0, 600.0);
+            stage.setTitle("Edit Customer");
+            stage.setScene(scene);
+            stage.show();
+        }
 
     }
 
