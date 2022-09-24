@@ -81,7 +81,7 @@ public class CustomersQuery {
         return countryDiv;
     }
 
-    public static int createCustomer(String name, String address, String zip, String phone, String user, String division) throws SQLException {
+    public static int createCustomer(String name, String address, String zip, String phone, String user, String division, String timeZoneOffset) throws SQLException {
         String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
@@ -91,16 +91,18 @@ public class CustomersQuery {
         rs.next();
 
         String sql2 = "INSERT INTO client_schedule.customers(Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) " +
-                "VALUES (?, ?, ?, ?, current_timestamp(), ?, current_timestamp(), ?, ?)";
+                "VALUES (?, ?, ?, ?, CONVERT_TZ(current_timestamp(), ?, '+00:00'), ?, CONVERT_TZ(current_timestamp(), ?, '+00:00'), ?, ?)";
         PreparedStatement ps2 = JDBC.getConnection().prepareStatement(sql2);
 
         ps2.setString(1, name);
         ps2.setString(2, address);
         ps2.setString(3, zip);
         ps2.setString(4, phone);
-        ps2.setString(5, user);
+        ps2.setString(5, timeZoneOffset);
         ps2.setString(6, user);
-        ps2.setInt(7, rs.getInt("Division_ID"));
+        ps2.setString(7, timeZoneOffset);
+        ps2.setString(8, user);
+        ps2.setInt(9, rs.getInt("Division_ID"));
 
         int rowsReturned = ps2.executeUpdate();
 

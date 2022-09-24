@@ -75,7 +75,9 @@ public class AddCustomerFormController implements Initializable {
     }
 
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
-        if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(), Users.currentUser.getUserName(), divisionComboBox.getSelectionModel().getSelectedItem().toString()) != 0){
+        if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(),
+                phoneTextField.getText(), Users.currentUser.getUserName(),
+                divisionComboBox.getSelectionModel().getSelectedItem().toString(), Users.currentUserTimeZone.toString()) != 0){
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
 

@@ -112,6 +112,22 @@ public class AppointmentsViewFormController implements Initializable {
 
 
     public void onActionEditButton(ActionEvent actionEvent) {
+        if (appointmentsTable.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Appointment Edit Error");
+            alert.setContentText("No appointment was selected from the list.");
+            alert.show();
+            return;
+        }
+        else {
+            //Get the selected appointment and pass it
+            Appointments selectedAppointment = (Appointments) appointmentsTable.getSelectionModel().getSelectedItem();
+            if (selectedAppointment == null) {
+                return;
+            }
+        }
+
+
 
     }
 

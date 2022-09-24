@@ -13,11 +13,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
 import model.*;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -123,6 +126,20 @@ public class AddAppointmentFormController implements Initializable {
         endampmChoiceBox.getItems().add("AM");
         endampmChoiceBox.getItems().add("PM");
         endampmChoiceBox.getSelectionModel().selectFirst();
+
+        String dt = "02-02-2022 9:44:00";
+
+        int indexOfTime = dt.indexOf(" ");
+        int indexOfMin = dt.indexOf(":");
+
+        String d = dt.substring(0, indexOfTime);
+        String h = dt.substring(indexOfTime, indexOfMin);
+        String m = dt.substring((indexOfMin + 1), (dt.indexOf(":") + 3));
+
+        LocalDate da = LocalDate.parse(d, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        startDatePicker.setValue(da);
+        hourChoiceBox.getSelectionModel().select(h.trim());
+        minuteChoiceBox.getSelectionModel().select(m.trim());
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
@@ -268,7 +285,7 @@ public class AddAppointmentFormController implements Initializable {
 
         if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID, Users.currentUser.getId(), contactID) != 0){
 
-            Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewFormController.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
 
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 

@@ -165,7 +165,7 @@ public class CustomersViewFormController implements Initializable{
             return;
         }
         else {
-            //Get the selected part and pass it to the ModifyPartForm with partToChange().
+            //Get the selected customer and pass it
             Customers selectedCustomer = (Customers)customersTable.getSelectionModel().getSelectedItem();
             if (selectedCustomer == null) {
                 return;

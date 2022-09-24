@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #b0e0e6;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditCustomerFormController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #b0e0e6;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditAppointmentFormController">
     <children>
         <GridPane prefHeight="600.0" prefWidth="1200.0">
             <columnConstraints>
@@ -49,7 +49,7 @@
                                         </StackPane>
                                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                                             <children>
-                                                <Label text="Edit Customer" />
+                                                <Label text="Create New Appointment" />
                                             </children>
                                         </StackPane>
                                     </children>
@@ -79,7 +79,7 @@
                                     <children>
                                         <StackPane alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="207.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Name:" />
+                                                <Label text="Title:" />
                                             </children>
                                             <opaqueInsets>
                                                 <Insets />
@@ -97,7 +97,7 @@
                                     <children>
                                         <StackPane alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="207.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Address:" />
+                                                <Label text="Description:" />
                                             </children>
                                         </StackPane>
                                     </children>
@@ -108,7 +108,7 @@
                                     <children>
                                         <StackPane alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="207.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Zip:" />
+                                                <Label text="Location:" />
                                             </children>
                                             <padding>
                                                 <Insets right="10.0" />
@@ -120,7 +120,7 @@
                                     <children>
                                         <StackPane alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="207.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Phone:" />
+                                                <Label text="Contact:" />
                                             </children>
                                             <padding>
                                                 <Insets right="10.0" />
@@ -132,43 +132,39 @@
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="281.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <TextField fx:id="nameTextField" promptText="Enter customer name here..." />
-                                            </children>
-                                        </StackPane>
+                                                <TextField fx:id="titleTextField" promptText="Title the meeting..." />
+                                            </children></StackPane>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="281.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <TextField fx:id="addressTextField" promptText="Enter customer's address here..." />
-                                            </children>
-                                        </StackPane>
+                                                <TextField fx:id="descriptionTextField" promptText="Enter a brief description..." />
+                                            </children></StackPane>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="281.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <TextField fx:id="zipTextField" promptText="Enter customer's Zip code here..." />
-                                            </children>
-                                        </StackPane>
+                                                <TextField fx:id="locationTextField" promptText="Enter location info..." />
+                                            </children></StackPane>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="281.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <TextField fx:id="phoneTextField" promptText="Enter customer's phone number here..." />
-                                            </children>
-                                        </StackPane>
+                                                <ComboBox fx:id="contactComboBox" prefWidth="150.0" promptText="Select a contact..." />
+                                            </children></StackPane>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="242.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Country:" StackPane.alignment="CENTER_RIGHT">
+                                                <Label alignment="CENTER" text="End Date/Time:" StackPane.alignment="CENTER">
                                                     <padding>
                                                         <Insets right="10.0" />
                                                     </padding>
@@ -179,35 +175,70 @@
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                     <children>
-                                        <StackPane prefHeight="150.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <StackPane prefHeight="150.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                        <VBox alignment="CENTER" layoutY="15.0" prefHeight="81.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <ComboBox fx:id="countryComboBox" onAction="#onActionCountryComboBox" prefWidth="150.0" />
-                                            </children>
-                                        </StackPane>
+                                                <DatePicker fx:id="endDatePicker" promptText="Select a date..." />
+                                                <HBox alignment="CENTER" prefHeight="20.0" prefWidth="241.0">
+                                                    <children>
+                                                        <ChoiceBox fx:id="endHourChoiceBox" prefWidth="150.0" />
+                                                        <ChoiceBox fx:id="endMinuteChoiceBox" prefWidth="150.0" />
+                                                        <ChoiceBox fx:id="endampmChoiceBox" prefWidth="150.0" />
+                                                    </children>
+                                                </HBox>
+                                            </children></VBox>
                                     </children>
                                 </AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                     <children>
-                                        <StackPane prefHeight="150.0" prefWidth="242.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <AnchorPane layoutX="42.0" layoutY="-52.0" prefHeight="148.0" prefWidth="242.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <Label text="Division:" StackPane.alignment="CENTER_RIGHT">
-                                                    <padding>
-                                                        <Insets right="10.0" />
-                                                    </padding>
-                                                </Label>
+                                                <Label layoutX="101.0" layoutY="40.0" text="Customer:" />
                                             </children>
-                                        </StackPane>
-                                    </children>
-                                </AnchorPane>
+                                        </AnchorPane>
+                                    </children></AnchorPane>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                                     <children>
                                         <StackPane prefHeight="150.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <children>
-                                                <ComboBox fx:id="divisionComboBox" onAction="#onActionDivisionComboBox" prefWidth="150.0" />
+                                                <ComboBox fx:id="customerComboBox" prefWidth="150.0" promptText="Select a customer..." />
+                                            </children></StackPane>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="97.0" prefWidth="36.0" GridPane.columnIndex="2">
+                                    <children>
+                                        <Label alignment="CENTER" layoutX="71.0" layoutY="40.0" text="Start Date/Time:" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                                    <children>
+                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="241.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <DatePicker fx:id="startDatePicker" promptText="Select a date..." />
+                                                <HBox prefHeight="26.0" prefWidth="241.0">
+                                                    <children>
+                                                        <ChoiceBox fx:id="hourChoiceBox" prefWidth="150.0" />
+                                                        <ChoiceBox fx:id="minuteChoiceBox" prefWidth="150.0" />
+                                                        <ChoiceBox fx:id="ampmChoiceBox" prefWidth="150.0" />
+                                                    </children>
+                                                </HBox>
                                             </children>
+                                        </VBox>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+                                    <children>
+                                        <StackPane layoutX="-42.0" layoutY="-27.0" prefHeight="123.0" prefWidth="158.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <children>
+                                                <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="33.0" text="Type:" StackPane.alignment="CENTER_RIGHT" />
+                                            </children>
+                                            <padding>
+                                                <Insets right="10.0" />
+                                            </padding>
                                         </StackPane>
                                     </children>
                                 </AnchorPane>
+                                <TextField fx:id="typeTextField" promptText="Specify meeting type..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
                             </children>
                         </GridPane>
                     </children></AnchorPane>
