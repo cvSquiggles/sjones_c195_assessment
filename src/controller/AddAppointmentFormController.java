@@ -122,24 +122,6 @@ public class AddAppointmentFormController implements Initializable {
             }
             i++;
         }
-        endMinuteChoiceBox.getSelectionModel().selectFirst();
-        endampmChoiceBox.getItems().add("AM");
-        endampmChoiceBox.getItems().add("PM");
-        endampmChoiceBox.getSelectionModel().selectFirst();
-
-        String dt = "02-02-2022 9:44:00";
-
-        int indexOfTime = dt.indexOf(" ");
-        int indexOfMin = dt.indexOf(":");
-
-        String d = dt.substring(0, indexOfTime);
-        String h = dt.substring(indexOfTime, indexOfMin);
-        String m = dt.substring((indexOfMin + 1), (dt.indexOf(":") + 3));
-
-        LocalDate da = LocalDate.parse(d, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        startDatePicker.setValue(da);
-        hourChoiceBox.getSelectionModel().select(h.trim());
-        minuteChoiceBox.getSelectionModel().select(m.trim());
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {

@@ -111,7 +111,7 @@ public class AppointmentsViewFormController implements Initializable {
     }
 
 
-    public void onActionEditButton(ActionEvent actionEvent) {
+    public void onActionEditButton(ActionEvent actionEvent) throws IOException {
         if (appointmentsTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Appointment Edit Error");
@@ -125,10 +125,18 @@ public class AppointmentsViewFormController implements Initializable {
             if (selectedAppointment == null) {
                 return;
             }
+            EditAppointmentFormController.appointmentToEdit(selectedAppointment);
+
+            Parent root = FXMLLoader.load(getClass().getResource("/view/EditAppointmentViewForm.fxml"));
+
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root, 1200.0, 600.0);
+            stage.setTitle("Update Appointment");
+
+            stage.setScene(scene);
+            stage.show();
         }
-
-
-
     }
 
     public void onActionAddButton(ActionEvent actionEvent) throws IOException, SQLException {
