@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -94,7 +95,35 @@
                      </children>
                   </StackPane>
                </children></AnchorPane>
-                <AnchorPane prefHeight="129.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <AnchorPane prefHeight="129.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <StackPane layoutX="350.0" prefHeight="150.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                           <children>
+                              <Button fx:id="aapmntTotalsButton" mnemonicParsing="false" onAction="#appmntTotalsButtonOnAction" text="Appmnt. Totals">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="appmntContactButton" mnemonicParsing="false" onAction="#appmentContactButtonOnAction" text="Appmnt. by Contact">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="instAppmntButton" mnemonicParsing="false" onAction="#instAppmentButtonOnAction" text="Instrument Appmnt.">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </HBox>
+                     </children>
+                  </StackPane>
+               </children></AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
                <children>
                         <StackPane prefHeight="101.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

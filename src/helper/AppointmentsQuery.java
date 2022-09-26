@@ -162,6 +162,17 @@ public class AppointmentsQuery {
         return rs;
     }
 
+    public static ResultSet selectTotals() throws SQLException {
+        ObservableList<Appointments> appmtList = FXCollections.observableArrayList();
+        String sql = "SELECT Type, INSERT(EXTRACT(YEAR_MONTH FROM Start), 5, 0, '-') AS yearMonth, count(EXTRACT(YEAR_MONTH FROM Start)) as Total" +
+                " FROM appointments Group by yearMonth, Type";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ResultSet rs = ps.executeQuery();
+
+        return rs;
+    }
+
     public static int insert(String title, String description, String location, String type, String start, String end, String timeZoneOffset,String createdBy,
                              int customerID, int userID, int contactID) throws SQLException{
         String sql = "INSERT INTO appointments(Title, Description, Location, Type, Start, End, Create_Date," +
