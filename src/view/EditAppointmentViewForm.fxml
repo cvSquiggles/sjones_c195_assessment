@@ -49,7 +49,7 @@
                                         </StackPane>
                                         <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
                                             <children>
-                                                <Label text="Create New Appointment" />
+                                                <Label text="Edit Appointment" />
                                             </children>
                                         </StackPane>
                                     </children>
@@ -239,6 +239,16 @@
                                     </children>
                                 </AnchorPane>
                                 <TextField fx:id="typeTextField" promptText="Specify meeting type..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <children>
+                              <Label layoutX="107.0" layoutY="40.0" text="User:" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                           <children>
+                              <ComboBox fx:id="userComboBox" layoutX="46.0" layoutY="36.0" prefWidth="150.0" promptText="Select a user..." />
+                           </children>
+                        </AnchorPane>
                             </children>
                         </GridPane>
                     </children></AnchorPane>

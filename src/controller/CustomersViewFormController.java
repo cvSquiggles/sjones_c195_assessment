@@ -33,9 +33,6 @@ import static controller.EditCustomerFormController.customerToEdit;
 import static controller.ModifyPartFormController.partToChange;
 
 public class CustomersViewFormController implements Initializable{
-
-    //public Label currentUser;
-    //public Label currentTimeZone;
     public TableView customersTable;
     public TableColumn idColumn;
     public TableColumn nameColumn;
@@ -49,13 +46,11 @@ public class CustomersViewFormController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //Set time zone
-        Locale myLocale = Locale.getDefault();
-        ZoneId myTimeZoneID = TimeZone.getDefault().toZoneId();
-        timeZoneLabel.setText(myTimeZoneID.toString());
+        //Set time zone label
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
 
         //Set username display
-        //currentUserLabel_customersView.setText("Welcome " + Users.currentUser + " | ");
+        currentUserLabel_customersView.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
         try {
             ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
@@ -106,6 +101,10 @@ public class CustomersViewFormController implements Initializable{
     public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
         //Display an alert requesting delete confirmation.
         if(customersTable.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Delete target null");
+            alert.setContentText("No target selected for deletion from the list");
+            alert.show();
             return;
         }
 
@@ -137,11 +136,15 @@ public class CustomersViewFormController implements Initializable{
                 try {
                     int rowsReturned = CustomersQuery.deleteCustomer(selectedCustomer.getID());
                     if (rowsReturned != 0) {
+                        Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                        alert3.setTitle("Delete confirmation");
+                        alert3.setContentText("Customer " + selectedCustomer.getName() + " with ID " + selectedCustomer.getID() + " was deleted successfully.");
+                        alert3.show();
                         ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
                         customersTable.setItems(customerList);
                     } else {
                         Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                        alert2.setTitle("Unable to add customer with the provided information!");
+                        alert2.setTitle("Unable to delete customer with the provided information!");
                         alert2.setContentText("Something must be wrong.");
                         alert2.show();
                     }

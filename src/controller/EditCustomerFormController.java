@@ -49,6 +49,12 @@ public class EditCustomerFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        //Set time zone label
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        //Set username display
+        welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
+
         int i = 0;
         while(i < Countries.countryOptions.size()){
             try {

@@ -34,9 +34,17 @@ public class AddCustomerFormController implements Initializable {
 
     public ObservableList<String> countryOptionsComboList = FXCollections.observableArrayList();
     public ObservableList<String> divisionOptionsComboList = FXCollections.observableArrayList();
+    public Label welcomeUserLabel;
+    public Label timeZoneLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //Set time zone label
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        //Set username display
+        welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
         int i = 0;
         while(i < Countries.countryOptions.size()){

@@ -57,6 +57,12 @@ public class AddAppointmentFormController implements Initializable {
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        //Set time zone label
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        //Set username display
+        welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
+
         //Populate user comboBox
         try {
             Users.userOptions = UsersQuery.selectUsers();

@@ -51,10 +51,11 @@ public class AppointmentsViewFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        //Set time zone
-        Locale myLocale = Locale.getDefault();
-        ZoneId myTimeZoneID = TimeZone.getDefault().toZoneId();
-        timeZoneLabel.setText(myTimeZoneID.toString());
+        //Set time zone label
+        timeZoneLabel.setText(Users.currentUserZoneID.toString());
+
+        //Set username display
+        currentUserLabel_customersView.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
         //Ensure dateOffset is reset
         dateOffset = 0;
@@ -107,7 +108,56 @@ public class AppointmentsViewFormController implements Initializable {
     }
 
     public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
+        //Display an alert requesting delete confirmation.
+        if(appointmentsTable.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Delete target null");
+            alert.setContentText("No target selected for deletion from the list");
+            alert.show();
+            return;
+        }
 
+        //Get the selected appointment from the table
+        Appointments selectedAppointment = (Appointments) appointmentsTable.getSelectionModel().getSelectedItem();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Appointment selected for deletion.");
+        alert.setContentText("Are you sure you want to delete this appointment?");
+        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, cancelButton);
+        alert.showAndWait().ifPresent(type -> {
+            if (type.getText() == "Yes") {
+                //Delete the appointment from the appointments table.
+                try {
+                    int rowsReturned = AppointmentsQuery.delete(selectedAppointment.getID());
+                    if (rowsReturned != 0) {
+                        Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
+                        alert3.setTitle("Delete confirmation");
+                        alert3.setContentText("Appointment ID " + selectedAppointment.getID() + " of type " + selectedAppointment.getType() + " was deleted successfully.");
+                        alert3.show();
+                        if(weekRadio.isSelected()) {
+                            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset);
+                            appointmentsTable.setItems(appointmentList);
+                        }
+                        else{
+                            ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset);
+                            appointmentsTable.setItems(appointmentList);
+                        }
+                    } else {
+                        Alert alert2 = new Alert(Alert.AlertType.ERROR);
+                        alert2.setTitle("Unable to delete appointment with the provided information!");
+                        alert2.setContentText("Something must be wrong.");
+                        alert2.show();
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else{
+                return;
+            }
+        });
     }
 
 
