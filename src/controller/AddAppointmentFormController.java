@@ -3,6 +3,7 @@ package controller;
 import helper.AppointmentsQuery;
 import helper.ContactsQuery;
 import helper.CustomersQuery;
+import helper.UsersQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,8 +52,27 @@ public class AddAppointmentFormController implements Initializable {
     public TextField descriptionTextField;
     public TextField titleTextField;
     public TextField typeTextField;
+    public ComboBox userComboBox;
+    private ObservableList<Users> userList = FXCollections.observableArrayList();
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //Populate user comboBox
+        try {
+            Users.userOptions = UsersQuery.selectUsers();
+            int i = 0;
+            while(i < Users.userOptions.size()){
+                userList.add(Users.userOptions.get(i));
+                i++;
+            }
+            i = 0;
+            while (i < userList.size()){
+                userComboBox.getItems().add(userList.get(i).getUserName());
+                i++;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         //Populate customer comboBox
         ObservableList<String> customerList = FXCollections.observableArrayList();
@@ -122,6 +142,11 @@ public class AddAppointmentFormController implements Initializable {
             }
             i++;
         }
+
+        endMinuteChoiceBox.getSelectionModel().selectFirst();
+        endampmChoiceBox.getItems().add("AM");
+        endampmChoiceBox.getItems().add("PM");
+        endampmChoiceBox.getSelectionModel().selectFirst();
     }
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
@@ -166,6 +191,7 @@ public class AddAppointmentFormController implements Initializable {
         try {
             int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
             int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
+            int assignedUserID = Users.userOptions.get(userComboBox.getSelectionModel().getSelectedIndex()).getId();
         }
         catch (IndexOutOfBoundsException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -222,7 +248,7 @@ public class AddAppointmentFormController implements Initializable {
         //Get form data
         int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
         int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
-        int userID = Users.currentUser.getId();
+        int assignedUserID = Users.userOptions.get(userComboBox.getSelectionModel().getSelectedIndex()).getId();
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
@@ -252,20 +278,16 @@ public class AddAppointmentFormController implements Initializable {
             endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
                     "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            //System.out.println(endDateTime);
         }
         else{
             endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
                     "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            //System.out.println(endDateTime);
         }
 
-        //System.out.println("User ID: "+ userID + "Contact ID: "+ contactID + "Customer ID: "+ customerID);
-        //System.out.println(timeZoneOffset);
 
-
-        if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID, Users.currentUser.getId(), contactID) != 0){
+        if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
+                assignedUserID, contactID) != 0){
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
 

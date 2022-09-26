@@ -28,7 +28,8 @@ public class AppointmentsQuery {
         while(rs.next()){
             Appointments appointmentValue = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"),
                     rs.getString("Description"), rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"),
-                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"));
+                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"),
+                    rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
 
             appointmentList.add(appointmentValue);
         }
@@ -69,7 +70,8 @@ public class AppointmentsQuery {
         while(rs.next()){
             Appointments appointmentValue = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"),
                     rs.getString("Description"), rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"),
-                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"));
+                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"),
+                    rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
 
             appointmentList.add(appointmentValue);
         }
@@ -99,7 +101,8 @@ public class AppointmentsQuery {
         while(rs.next()){
             Appointments appointmentValue = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"),
                     rs.getString("Description"), rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"),
-                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"));
+                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"),
+                    rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
 
             appointmentList.add(appointmentValue);
         }
@@ -184,14 +187,15 @@ public class AppointmentsQuery {
 
     public static int update(String title, String description, String location, String type, int customerID, int userID, int contactID, int appointmentID) throws SQLException{
         String sql = "UPDATE appointments SET Title = ?, Description = ?," +
-                "Location = ?, Type = ?, Last_Update = current_timestamp(), Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
+                "Location = ?, Type = ?, Last_Update = current_timestamp(), Last_Updated_By = ?," +
+                "Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setString(1, title);
         ps.setString(2, description);
         ps.setString(3, location);
         ps.setString(4, type);
-        ps.setInt(5, 1);
+        ps.setInt(5, userID);
         ps.setInt(6, 1);
         ps.setInt(7, 1);
         ps.setInt(8, appointmentID);

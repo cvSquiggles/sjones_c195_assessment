@@ -9,12 +9,14 @@ public class Appointments {
     private String createdBy;
     private String start;
     private String end;
+    private String customerName;
     private int customerID;
     private int userID;
     private String contactName;
     private int contactID;
 
-    public Appointments(int id, String title, String description, String location, String contactName, String type, String createdBy, String start, String end ,int customerID, int userID, int contactID){
+    public Appointments(int id, String title, String description, String location, String contactName, String type, String createdBy,
+                        String start, String end ,int customerID, int userID, int contactID, String customerName){
         this.id = id;
         this.title = title;
         this.description = description;
@@ -27,9 +29,11 @@ public class Appointments {
         this.customerID = customerID;
         this.userID = userID;
         this.contactID = contactID;
+        this.customerName = customerName;
     }
 
     public int getID() {return id;}
+    public String getCustomerName() {return customerName;}
 
     public String getTitle() {return title;}
 

@@ -1,5 +1,7 @@
 package model;
 
+import javafx.collections.ObservableList;
+
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Locale;
@@ -16,6 +18,7 @@ public class Users {
     public static Locale currentUserLocale;
     public static ZoneOffset currentUserTimeZone;
     public static ResourceBundle currentUserRB;
+    public static ObservableList<Users> userOptions;
 
     public Users(int id, String userName, String password, String createdBy){
         this.id = id;
