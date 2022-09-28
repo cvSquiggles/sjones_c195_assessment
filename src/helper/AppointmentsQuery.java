@@ -82,6 +82,53 @@ public class AppointmentsQuery {
         return appointmentList;
     }
 
+    public static ObservableList<Appointments> selectContactAppointmentsListWeek(int weekOffSet, int contactID) throws SQLException {
+        String sql;
+        if (weekOffSet >= 0) {
+            sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update," +
+                    " a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                    "FROM appointments as a " +
+                    "JOIN Users as u on a.User_ID = u.User_ID " +
+                    "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                    "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
+                    "WHERE YEARWEEK(Start) = (YEARWEEK(DATE_ADD(NOW(), INTERVAL (7 * ?) DAY)))" +
+                    "AND a.Contact_ID = ? " +
+                    "ORDER BY Start ASC";
+        }
+        else{
+            sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                    "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                    "FROM appointments as a " +
+                    "JOIN Users as u on a.User_ID = u.User_ID " +
+                    "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                    "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
+                    "WHERE YEARWEEK(Start) = (YEARWEEK(DATE_SUB(NOW(), INTERVAL (-7 * ?) DAY)))" +
+                    "AND a.Contact_ID = ? " +
+                    "ORDER BY Start ASC";
+        }
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setInt(1, weekOffSet);
+        ps.setInt(2, contactID);
+
+        ResultSet rs = ps.executeQuery();
+
+        ObservableList<Appointments> appointmentList = FXCollections.observableArrayList();
+
+        while(rs.next()){
+            Appointments appointmentValue = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"),
+                    rs.getString("Description"), rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"),
+                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"),
+                    rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
+
+            appointmentList.add(appointmentValue);
+        }
+
+        return appointmentList;
+    }
+
     public static ObservableList<Appointments> selectAppointmentsListMonth(int monthOffset) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
                 "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
@@ -91,12 +138,46 @@ public class AppointmentsQuery {
                 "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
                 "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
                 "WHERE MONTH(Start) = (MONTH(DATE_ADD(NOW(), INTERVAL (1 * ?) MONTH))) AND " +
-                "YEAR(Start) = (YEAR(DATE_ADD(NOW(), INTERVAL (1 * ?) MONTH)))" +
+                "YEAR(Start) = (YEAR(DATE_ADD(NOW(), INTERVAL (1 * ?) MONTH))) " +
                 "ORDER BY Start ASC";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setInt(1, monthOffset);
         ps.setInt(2, monthOffset);
+
+        ResultSet rs = ps.executeQuery();
+
+        ObservableList<Appointments> appointmentList = FXCollections.observableArrayList();
+
+        while(rs.next()){
+            Appointments appointmentValue = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"),
+                    rs.getString("Description"), rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"),
+                    rs.getString("Created_By"), rs.getString("Start"), rs.getString("End"),
+                    rs.getInt("Customer_ID") ,rs.getInt("User_ID"), rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
+
+            appointmentList.add(appointmentValue);
+        }
+
+        return appointmentList;
+    }
+
+    public static ObservableList<Appointments> selectContactAppointmentsListMonth(int monthOffset, int contactID) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
+                "WHERE MONTH(Start) = (MONTH(DATE_ADD(NOW(), INTERVAL (1 * ?) MONTH))) AND " +
+                "YEAR(Start) = (YEAR(DATE_ADD(NOW(), INTERVAL (1 * ?) MONTH))) AND " +
+                "a.Contact_ID = ? " +
+                "ORDER BY Start ASC";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setInt(1, monthOffset);
+        ps.setInt(2, monthOffset);
+        ps.setInt(3, contactID);
 
         ResultSet rs = ps.executeQuery();
 
