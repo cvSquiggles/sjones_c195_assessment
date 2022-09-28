@@ -1,9 +1,6 @@
 package controller;
 
-import helper.AppointmentsQuery;
-import helper.ContactsQuery;
-import helper.CustomersQuery;
-import helper.UsersQuery;
+import helper.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,8 +16,12 @@ import model.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -194,6 +195,7 @@ public class AddAppointmentFormController implements Initializable {
     }
 
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
+/*
         try {
             int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
             int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
@@ -255,6 +257,7 @@ public class AddAppointmentFormController implements Initializable {
         int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
         int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
         int assignedUserID = Users.userOptions.get(userComboBox.getSelectionModel().getSelectedIndex()).getId();
+        */
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
@@ -263,7 +266,6 @@ public class AddAppointmentFormController implements Initializable {
         String desc = descriptionTextField.getText();
         String loc = locationTextField.getText();
         String type = typeTextField.getText();
-
 
         //Get start date/time stamp
         if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
@@ -291,8 +293,66 @@ public class AddAppointmentFormController implements Initializable {
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
         }
 
+        //System.out.println("Start time input " + endDateTime);
+        //System.out.println("Time offset input " + Users.currentUserTimeZone.toString());
+        String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
+        ps.setString(1, startDateTime);
+        ps.setString(2, Users.currentUserTimeZone.toString());
+        ps.setString(3, endDateTime);
+        ps.setString(4, Users.currentUserTimeZone.toString());
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String startConverted = rs.getString("Start");
+        String endConverted = rs.getString("End");
+
+        int startConvertedValue = Integer.parseInt(startConverted.substring((startConverted.indexOf(':')-2), (startConverted.indexOf(':'))));
+        int startConvertedValueMin = Integer.parseInt(startConverted.substring((startConverted.indexOf(':') + 1), (startConverted.indexOf(':') + 3)));
+        int endConvertedValue = Integer.parseInt(endConverted.substring((endConverted.indexOf(':')-2), (endConverted.indexOf(':'))));
+        int endConvertedValueMin = Integer.parseInt(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
+        //System.out.println(endConverted);
+        //System.out.println(endConvertedValue);
+
+        if (startConvertedValue < 8 || startConvertedValue >= 22){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting starts outside of business hours!");
+            alert.setContentText("Please schedule meeting to start after 8am EST, and before 10pm EST.");
+            alert.show();
+            return;
+        }
+
+        if (endConvertedValue < 8 || (endConvertedValue >= 22 && endConvertedValueMin > 0)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting ends outside of business hours!");
+            alert.setContentText("Please schedule meeting to end before 10pm EST.");
+            alert.show();
+            return;
+        }
+
+        System.out.println(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
+        System.out.println(endConvertedValueMin);
+
+        if (startConvertedValue > endConvertedValue){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Meeting is longer than business hours allow.");
+                alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
+                alert.show();
+                return;
+        }
+
+        if (endConvertedValue > startConvertedValue){
+            if ((((endConvertedValue - startConvertedValue) == 14) && (endConvertedValueMin > startConvertedValueMin)) || (endConvertedValue - startConvertedValue) > 14){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Meeting is longer than business hours allow.");
+                alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
+                alert.show();
+                return;
+            }
+        }
+
+        /*if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
                 assignedUserID, contactID) != 0){
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
@@ -310,6 +370,6 @@ public class AddAppointmentFormController implements Initializable {
             alert.setTitle("Unable to add appointment with the provided information!");
             alert.setContentText("Something must be wrong.");
             alert.show();
-        }
+        }*/
     }
 }
