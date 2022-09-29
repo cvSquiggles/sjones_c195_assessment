@@ -73,7 +73,8 @@ public class reportAppointmentContactsFormController implements Initializable {
 
         try {
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
-                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                    Users.currentUserTimeZone.toString());
 
             idColumn.setCellValueFactory(new PropertyValueFactory<>("ID"));
             titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -123,7 +124,8 @@ public class reportAppointmentContactsFormController implements Initializable {
         try {
             dateOffset = 0;
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
-                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                    Users.currentUserTimeZone.toString());
             appointmentsTable.setItems(appointmentList);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -134,7 +136,8 @@ public class reportAppointmentContactsFormController implements Initializable {
         try {
             dateOffset = 0;
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
-                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                    Users.currentUserTimeZone.toString());
             appointmentsTable.setItems(appointmentList);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -147,7 +150,8 @@ public class reportAppointmentContactsFormController implements Initializable {
                 dateOffset = dateOffset - 1;
                 System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
-                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                        Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -157,7 +161,8 @@ public class reportAppointmentContactsFormController implements Initializable {
                 dateOffset = dateOffset - 1;
                 System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
-                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                        Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -171,7 +176,8 @@ public class reportAppointmentContactsFormController implements Initializable {
                 dateOffset = dateOffset + 1;
                 System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
-                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                        Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -181,7 +187,8 @@ public class reportAppointmentContactsFormController implements Initializable {
                 dateOffset = dateOffset + 1;
                 System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
-                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                        Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                        Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -193,11 +200,13 @@ public class reportAppointmentContactsFormController implements Initializable {
         dateOffset = 0;
         if (weekRadio.isSelected()) {
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
-                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                    Users.currentUserTimeZone.toString());
             appointmentsTable.setItems(appointmentList);
         } else{
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
-                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID());
+                    Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
+                    Users.currentUserTimeZone.toString());
             appointmentsTable.setItems(appointmentList);
         }
     }

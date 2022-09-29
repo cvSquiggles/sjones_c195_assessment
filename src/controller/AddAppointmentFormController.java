@@ -267,30 +267,57 @@ public class AddAppointmentFormController implements Initializable {
         String loc = locationTextField.getText();
         String type = typeTextField.getText();
 
-        //Get start date/time stamp
-        if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
-            startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
-                    "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
-                    ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            //System.out.println(startDateTime);
-        }
-        else{
-            startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
-                    "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
-                    ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-            //System.out.println(startDateTime);
+        //ensure month is double value is double-digit for date/time formatter checks ahead
+        if (startDatePicker.getValue().getMonthValue() < 10) {
+            //Get start date/time stamp
+            if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
+                startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
+                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+                //System.out.println(startDateTime);
+            } else {
+                startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
+                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+                //System.out.println(startDateTime);
+            }
+        } else{
+            //Get start date/time stamp
+            if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
+                startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
+                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+                //System.out.println(startDateTime);
+            } else {
+                startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
+                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+                //System.out.println(startDateTime);
+            }
         }
 
-        //Get end date/time stamp
-        if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
-            endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
-                    "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
-                    ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-        }
-        else{
-            endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
-                    "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
-                    ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+        //ensure month is double value is double-digit for date/time formatter checks ahead
+        if (endDatePicker.getValue().getMonthValue() < 10) {
+            //Get end date/time stamp
+            if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
+                endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
+                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+            } else {
+                endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
+                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+            }
+        } else {
+            if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
+                endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
+                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+            } else {
+                endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
+                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+            }
         }
 
         //Query to verify date/times are valid
@@ -316,6 +343,8 @@ public class AddAppointmentFormController implements Initializable {
         String endConverted = rs.getString("End");
         String diff = rs.getString("Diff");
         int diffSeconds = rs.getInt("DiffSeconds");
+
+        System.out.println(startDateTime);
 
         int startConvertedValue = Integer.parseInt(startConverted.substring((startConverted.indexOf(':')-2), (startConverted.indexOf(':'))));
         int startConvertedValueMin = Integer.parseInt(startConverted.substring((startConverted.indexOf(':') + 1), (startConverted.indexOf(':') + 3)));
@@ -353,6 +382,45 @@ public class AddAppointmentFormController implements Initializable {
             alert.setContentText("Please schedule meeting to end before 10pm EST.");
             alert.show();
             return;
+        }
+
+        //Code to check if a start or end time overlaps with a customers other meetings.
+        ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start = LocalDateTime.parse(startDateTime, formatter);
+        LocalDateTime end = LocalDateTime.parse(endDateTime, formatter);
+
+        try {
+            ResultSet rs2 = AppointmentsQuery.selectByCustomer(2, Users.currentUserTimeZone.toString());
+            while(rs2.next()){
+                Appointments appToAdd = new Appointments(rs2.getInt("Appointment_ID"), rs2.getString("Title"), rs2.getString("Description"),
+                        rs2.getString("Location"), rs2.getString("Contact_Name"), rs2.getString("Type"), rs2.getString ("Created_By"),
+                        rs2.getString("Start"), rs2.getString("End"), rs2.getInt("Customer_ID"), rs2.getInt("User_ID"),
+                        rs2.getInt("Contact_ID"), rs2.getString("Customer_Name"));
+
+                appsToCheck.add(appToAdd);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        int i = 0;
+        while (i < appsToCheck.size()){
+            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Meeting conflict");
+                alert.setContentText("This meeting starts during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Meeting conflict");
+                alert.setContentText("This meeting ends during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            i++;
         }
 
         if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,

@@ -38,11 +38,11 @@ public class AppointmentsQuery {
         return appointmentList;
     }
 
-    public static ObservableList<Appointments> selectAppointmentsListWeek(int weekOffSet) throws SQLException {
+    public static ObservableList<Appointments> selectAppointmentsListWeek(int weekOffSet, String timeZone) throws SQLException {
         String sql;
         if (weekOffSet >= 0) {
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update," +
+                    "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update," +
                     " a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -53,7 +53,7 @@ public class AppointmentsQuery {
         }
         else{
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                    "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
                     "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -64,7 +64,9 @@ public class AppointmentsQuery {
         }
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        ps.setInt(1, weekOffSet);
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, weekOffSet);
 
         ResultSet rs = ps.executeQuery();
 
@@ -82,11 +84,11 @@ public class AppointmentsQuery {
         return appointmentList;
     }
 
-    public static ObservableList<Appointments> selectContactAppointmentsListWeek(int weekOffSet, int contactID) throws SQLException {
+    public static ObservableList<Appointments> selectContactAppointmentsListWeek(int weekOffSet, int contactID, String timeZone) throws SQLException {
         String sql;
         if (weekOffSet >= 0) {
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update," +
+                    "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update," +
                     " a.Last_Updated_By, a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -98,7 +100,7 @@ public class AppointmentsQuery {
         }
         else{
             sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                    "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                    "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
                     "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                     "FROM appointments as a " +
                     "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -110,8 +112,10 @@ public class AppointmentsQuery {
         }
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        ps.setInt(1, weekOffSet);
-        ps.setInt(2, contactID);
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, weekOffSet);
+        ps.setInt(4, contactID);
 
         ResultSet rs = ps.executeQuery();
 
@@ -129,9 +133,9 @@ public class AppointmentsQuery {
         return appointmentList;
     }
 
-    public static ObservableList<Appointments> selectAppointmentsListMonth(int monthOffset) throws SQLException {
+    public static ObservableList<Appointments> selectAppointmentsListMonth(int monthOffset, String timeZone) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
                 "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                 "FROM appointments as a " +
                 "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -142,8 +146,10 @@ public class AppointmentsQuery {
                 "ORDER BY Start ASC";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        ps.setInt(1, monthOffset);
-        ps.setInt(2, monthOffset);
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, monthOffset);
+        ps.setInt(4, monthOffset);
 
         ResultSet rs = ps.executeQuery();
 
@@ -161,9 +167,9 @@ public class AppointmentsQuery {
         return appointmentList;
     }
 
-    public static ObservableList<Appointments> selectContactAppointmentsListMonth(int monthOffset, int contactID) throws SQLException {
+    public static ObservableList<Appointments> selectContactAppointmentsListMonth(int monthOffset, int contactID, String timeZone) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "CONVERT_TZ(a.Start, '+00:00', '-04:00') as Start, CONVERT_TZ(a.End, '+00:00', '-04:00') as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, " +
                 "a.Customer_ID, a.User_ID, a.Contact_ID, cu.Customer_Name, u.User_Name, co.Contact_Name " +
                 "FROM appointments as a " +
                 "JOIN Users as u on a.User_ID = u.User_ID " +
@@ -175,9 +181,11 @@ public class AppointmentsQuery {
                 "ORDER BY Start ASC";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        ps.setInt(1, monthOffset);
-        ps.setInt(2, monthOffset);
-        ps.setInt(3, contactID);
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, monthOffset);
+        ps.setInt(4, monthOffset);
+        ps.setInt(5, contactID);
 
         ResultSet rs = ps.executeQuery();
 
@@ -227,16 +235,18 @@ public class AppointmentsQuery {
         return rs;
     }
 
-    public static ResultSet selectByClient(int client_id) throws SQLException {
+    public static ResultSet selectByCustomer(int customer_id, String timeZone) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "a.Start, a.End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
                 "FROM appointments as a " +
                 "JOIN Users as u on a.User_ID = u.User_ID " +
                 "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
                 "JOIN Contacts as co on a.Contact_ID = co.Contact_ID  WHERE a.Customer_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
-        ps.setInt(1, client_id);
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, customer_id);
 
         ResultSet rs = ps.executeQuery();
 

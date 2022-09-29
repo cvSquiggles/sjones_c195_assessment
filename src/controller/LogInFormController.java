@@ -4,6 +4,8 @@ import helper.AppointmentsQuery;
 import helper.CountriesQuery;
 import helper.FirstLevelDivisionsQuery;
 import helper.UsersQuery;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.Appointments;
 import model.Countries;
 import model.FirstLevelDivisions;
 import model.Users;
@@ -22,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -62,12 +66,38 @@ public class LogInFormController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        /*int i = 0;
-        while(i < FirstLevelDivisions.divisionOptions.size()){
-            if (FirstLevelDivisions.divisionOptions.get(i).getCountryID() == 2)
-                System.out.println(FirstLevelDivisions.divisionOptions.get(i).getDivision());
+        //Code to check if a start or end time overlaps with a customers other meetings.
+        ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start = LocalDateTime.parse("2022-09-29 14:00:00", formatter);
+        LocalDateTime end = LocalDateTime.parse("2022-09-29 15:00:00", formatter);
+
+        try {
+            ResultSet rs = AppointmentsQuery.selectByCustomer(2, Users.currentUserTimeZone.toString());
+            while(rs.next()){
+                Appointments appToAdd = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"), rs.getString("Description"),
+                        rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"), rs.getString ("Created_By"),
+                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"), rs.getInt("User_ID"),
+                        rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
+
+                appsToCheck.add(appToAdd);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        int i = 0;
+        System.out.println(appsToCheck.size());
+
+        while (i < appsToCheck.size()){
+            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
+                System.out.println("This meeting starts during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
+            }
+            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
+                System.out.println("This meeting ends during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
+            }
             i++;
-        }*/
+        }
     }
 
     /**

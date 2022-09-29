@@ -1,5 +1,8 @@
 package model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Appointments {
     private int id;
     private String title;
@@ -8,7 +11,9 @@ public class Appointments {
     private String type;
     private String createdBy;
     private String start;
+    private LocalDateTime startStamp;
     private String end;
+    private LocalDateTime endStamp;
     private String customerName;
     private int customerID;
     private int userID;
@@ -30,6 +35,9 @@ public class Appointments {
         this.userID = userID;
         this.contactID = contactID;
         this.customerName = customerName;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        startStamp = LocalDateTime.parse(start, formatter);
+        endStamp = LocalDateTime.parse(end, formatter);
     }
 
     public int getID() {return id;}
@@ -46,8 +54,10 @@ public class Appointments {
     public String getCreatedBy() {return createdBy;}
 
     public String getStart() {return start;}
+    public LocalDateTime getStartStamp() {return startStamp;}
 
     public String getEnd() {return end;}
+    public LocalDateTime getEndStamp() {return endStamp;}
 
     public String getContactName() {return contactName;}
 

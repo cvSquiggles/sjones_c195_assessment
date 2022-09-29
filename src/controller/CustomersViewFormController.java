@@ -120,7 +120,7 @@ public class CustomersViewFormController implements Initializable{
         alert.showAndWait().ifPresent(type -> {
             if (type.getText() == "Yes") {
                 try {
-                    ResultSet rs = AppointmentsQuery.selectByClient(selectedCustomer.getID());
+                    ResultSet rs = AppointmentsQuery.selectByCustomer(selectedCustomer.getID(), Users.currentUserTimeZone.toString());
 
                     if(rs.next()){
                         Alert alert2 = new Alert(Alert.AlertType.ERROR);
