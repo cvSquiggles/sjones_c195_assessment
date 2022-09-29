@@ -195,7 +195,7 @@ public class AddAppointmentFormController implements Initializable {
     }
 
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
-/*
+
         try {
             int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
             int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
@@ -257,7 +257,7 @@ public class AddAppointmentFormController implements Initializable {
         int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
         int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
         int assignedUserID = Users.userOptions.get(userComboBox.getSelectionModel().getSelectedIndex()).getId();
-        */
+
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
@@ -293,27 +293,51 @@ public class AddAppointmentFormController implements Initializable {
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
         }
 
-        //System.out.println("Start time input " + endDateTime);
-        //System.out.println("Time offset input " + Users.currentUserTimeZone.toString());
-        String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End";
+        //Query to verify date/times are valid
+        //Referenced https://stackoverflow.com/questions/4759248/difference-between-two-dates-in-mysql and,
+        //https://www.w3schools.com/sql/func_mysql_timediff.asp
+        String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End, TIMEDIFF(?, ?) as Diff, " +
+                "TIMESTAMPDIFF(SECOND, ?, ?) as DiffSeconds";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setString(1, startDateTime);
         ps.setString(2, Users.currentUserTimeZone.toString());
         ps.setString(3, endDateTime);
         ps.setString(4, Users.currentUserTimeZone.toString());
+        ps.setString(5, endDateTime);
+        ps.setString(6, startDateTime);
+        ps.setString(7, startDateTime);
+        ps.setString(8, endDateTime);
+
 
         ResultSet rs = ps.executeQuery();
         rs.next();
         String startConverted = rs.getString("Start");
         String endConverted = rs.getString("End");
+        String diff = rs.getString("Diff");
+        int diffSeconds = rs.getInt("DiffSeconds");
 
         int startConvertedValue = Integer.parseInt(startConverted.substring((startConverted.indexOf(':')-2), (startConverted.indexOf(':'))));
         int startConvertedValueMin = Integer.parseInt(startConverted.substring((startConverted.indexOf(':') + 1), (startConverted.indexOf(':') + 3)));
         int endConvertedValue = Integer.parseInt(endConverted.substring((endConverted.indexOf(':')-2), (endConverted.indexOf(':'))));
         int endConvertedValueMin = Integer.parseInt(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
-        //System.out.println(endConverted);
-        //System.out.println(endConvertedValue);
+        int diffInHours = Integer.parseInt(diff.substring((diff.indexOf(':') - 2), (diff.indexOf(':'))));
+
+        if (diffSeconds < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting time logic error");
+            alert.setContentText("Please schedule meeting to end AFTER it starts.");
+            alert.show();
+            return;
+        }
+
+        if (diffInHours >= 14){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting is longer than business hours allow.");
+            alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
+            alert.show();
+            return;
+        }
 
         if (startConvertedValue < 8 || startConvertedValue >= 22){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -331,28 +355,7 @@ public class AddAppointmentFormController implements Initializable {
             return;
         }
 
-        System.out.println(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
-        System.out.println(endConvertedValueMin);
-
-        if (startConvertedValue > endConvertedValue){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Meeting is longer than business hours allow.");
-                alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
-                alert.show();
-                return;
-        }
-
-        if (endConvertedValue > startConvertedValue){
-            if ((((endConvertedValue - startConvertedValue) == 14) && (endConvertedValueMin > startConvertedValueMin)) || (endConvertedValue - startConvertedValue) > 14){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Meeting is longer than business hours allow.");
-                alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
-                alert.show();
-                return;
-            }
-        }
-
-        /*if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
+        if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
                 assignedUserID, contactID) != 0){
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
@@ -370,6 +373,6 @@ public class AddAppointmentFormController implements Initializable {
             alert.setTitle("Unable to add appointment with the provided information!");
             alert.setContentText("Something must be wrong.");
             alert.show();
-        }*/
+        }
     }
 }

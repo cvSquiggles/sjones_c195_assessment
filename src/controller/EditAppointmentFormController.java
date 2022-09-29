@@ -1,9 +1,6 @@
 package controller;
 
-import helper.AppointmentsQuery;
-import helper.ContactsQuery;
-import helper.CustomersQuery;
-import helper.UsersQuery;
+import helper.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +18,8 @@ import model.Users;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -159,6 +158,52 @@ public class EditAppointmentFormController implements Initializable {
         endampmChoiceBox.getSelectionModel().selectFirst();
 
         //Setup start date-time options based on the appoinment you're editing.
+
+        //Populate start time choice boxes
+        i = 1;
+        while (i < 13) {
+            hourChoiceBox.getItems().add(i);
+            i++;
+        }
+        hourChoiceBox.getSelectionModel().selectFirst();
+        i = 0;
+        while (i < 60) {
+            if(i < 10) {
+                minuteChoiceBox.getItems().add("0" + i);
+            }
+            else {
+                minuteChoiceBox.getItems().add(i);
+            }
+            i++;
+        }
+        minuteChoiceBox.getSelectionModel().selectFirst();
+        ampmChoiceBox.getItems().add("AM");
+        ampmChoiceBox.getItems().add("PM");
+        ampmChoiceBox.getSelectionModel().selectFirst();
+
+        //Populate end time choice boxes
+        i = 1;
+        while (i < 13) {
+            endHourChoiceBox.getItems().add(i);
+            i++;
+        }
+        endHourChoiceBox.getSelectionModel().selectFirst();
+        i = 0;
+        while (i < 60) {
+            if(i < 10) {
+                endMinuteChoiceBox.getItems().add("0" + i);
+            }
+            else {
+                endMinuteChoiceBox.getItems().add(i);
+            }
+            i++;
+        }
+
+        endMinuteChoiceBox.getSelectionModel().selectFirst();
+        endampmChoiceBox.getItems().add("AM");
+        endampmChoiceBox.getItems().add("PM");
+        endampmChoiceBox.getSelectionModel().selectFirst();
+
         String dtStart = appointmentToEdit.getStart();
 
         int indexOfTimeS = dtStart.indexOf(" ");
@@ -251,6 +296,7 @@ public class EditAppointmentFormController implements Initializable {
     }
 
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
+
         try {
             int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
             int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
@@ -336,6 +382,67 @@ public class EditAppointmentFormController implements Initializable {
             endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
                     "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                     ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
+        }
+
+        //Query to verify date/times are valid
+        String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End, TIMEDIFF(?, ?) as Diff, " +
+                "TIMESTAMPDIFF(SECOND, ?, ?) as DiffSeconds";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setString(1, startDateTime);
+        ps.setString(2, Users.currentUserTimeZone.toString());
+        ps.setString(3, endDateTime);
+        ps.setString(4, Users.currentUserTimeZone.toString());
+        ps.setString(5, endDateTime);
+        ps.setString(6, startDateTime);
+        ps.setString(7, startDateTime);
+        ps.setString(8, endDateTime);
+
+
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        String startConverted = rs.getString("Start");
+        String endConverted = rs.getString("End");
+        String diff = rs.getString("Diff");
+        int diffSeconds = rs.getInt("DiffSeconds");
+
+        int startConvertedValue = Integer.parseInt(startConverted.substring((startConverted.indexOf(':')-2), (startConverted.indexOf(':'))));
+        int startConvertedValueMin = Integer.parseInt(startConverted.substring((startConverted.indexOf(':') + 1), (startConverted.indexOf(':') + 3)));
+        int endConvertedValue = Integer.parseInt(endConverted.substring((endConverted.indexOf(':')-2), (endConverted.indexOf(':'))));
+        int endConvertedValueMin = Integer.parseInt(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
+        int diffInHours = Integer.parseInt(diff.substring((diff.indexOf(':') - 2), (diff.indexOf(':'))));
+
+        //Referenced https://www.w3schools.com/sql/func_mysql_timediff.asp
+        if (diffSeconds < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting time logic error");
+            alert.setContentText("Please schedule meeting to end AFTER it starts.");
+            alert.show();
+            return;
+        }
+
+        if (diffInHours >= 14){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting is longer than business hours allow.");
+            alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
+            alert.show();
+            return;
+        }
+
+        if (startConvertedValue < 8 || startConvertedValue >= 22){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting starts outside of business hours!");
+            alert.setContentText("Please schedule meeting to start after 8am EST, and before 10pm EST.");
+            alert.show();
+            return;
+        }
+
+        if (endConvertedValue < 8 || (endConvertedValue >= 22 && endConvertedValueMin > 0)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Meeting ends outside of business hours!");
+            alert.setContentText("Please schedule meeting to end before 10pm EST.");
+            alert.show();
+            return;
         }
 
         if (AppointmentsQuery.update(titleTextField.getText(), descriptionTextField.getText(), locationTextField.getText(),
