@@ -40,6 +40,7 @@ public class LogInFormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Get currentUserData
+        Users.homePageLoaded = false;
         Users.currentUserLocale = Locale.getDefault();
         Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
         LocalDateTime localDateTime = LocalDateTime.now();

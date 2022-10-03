@@ -201,8 +201,6 @@ public class EditAppointmentFormController implements Initializable {
         }
 
         endMinuteChoiceBox.getSelectionModel().selectFirst();
-        endampmChoiceBox.getItems().add("AM");
-        endampmChoiceBox.getItems().add("PM");
         endampmChoiceBox.getSelectionModel().selectFirst();
 
         String dtStart = appointmentToEdit.getStart();
@@ -358,18 +356,23 @@ public class EditAppointmentFormController implements Initializable {
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
+        String startDayFormat = "-";
+        String endDayFormat = "-";
 
-        //ensure month is double value is double-digit for date/time formatter checks ahead
+        //ensure month is double value is double-digit for date/time formatter checks ahead as well as day
+        if(startDatePicker.getValue().getDayOfMonth() < 10){
+            startDayFormat = "-0";
+        }
         if (startDatePicker.getValue().getMonthValue() < 10) {
             //Get start date/time stamp
             if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
-                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
                 //System.out.println(startDateTime);
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
-                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
                 //System.out.println(startDateTime);
             }
@@ -377,37 +380,40 @@ public class EditAppointmentFormController implements Initializable {
             //Get start date/time stamp
             if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
-                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
                 //System.out.println(startDateTime);
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
-                        "-" + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
                 //System.out.println(startDateTime);
             }
         }
 
-        //ensure month is double value is double-digit for date/time formatter checks ahead
+        //ensure month is double value is double-digit for date/time formatter checks ahead as well as day
+        if(endDatePicker.getValue().getDayOfMonth() < 10){
+            endDayFormat = "-0";
+        }
         if (endDatePicker.getValue().getMonthValue() < 10) {
             //Get end date/time stamp
             if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
-                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
-                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         } else {
             if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
-                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
-                        "-" + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         }

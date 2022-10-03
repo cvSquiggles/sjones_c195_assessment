@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import model.Appointments;
 import model.Customers;
 
+import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -229,6 +230,32 @@ public class AppointmentsQuery {
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setInt(1, appointmentID);
+
+        ResultSet rs = ps.executeQuery();
+
+        return rs;
+    }
+
+    public static ResultSet selectByUserWithTime(int userID, String timeZone, String logInTime) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, " +
+                "a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
+                "WHERE a.User_ID = ? " +
+                "AND TIMEDIFF(CONVERT_TZ(?, ?, '+00:00'), a.Start) < '-00:15:00' " +
+                "AND TIMEDIFF(CONVERT_TZ(?, ?, '+00:00'), a.Start) LIKE '-%'";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, userID);
+        ps.setString(4, logInTime);
+        ps.setString(5, timeZone);
+        ps.setString(6, logInTime);
+        ps.setString(7, timeZone);
 
         ResultSet rs = ps.executeQuery();
 

@@ -19,6 +19,7 @@ public class Users {
     public static ZoneOffset currentUserTimeZone;
     public static ResourceBundle currentUserRB;
     public static ObservableList<Users> userOptions;
+    public static boolean homePageLoaded;
 
     public Users(int id, String userName, String password, String createdBy){
         this.id = id;
@@ -32,6 +33,7 @@ public class Users {
     public String getUserName() {return userName;}
 
     public String getPassword() {return password;}
+    public boolean getHomePageLoaded() {return homePageLoaded;}
 
     public String getCreatedBy() {return createdBy;}
 }
