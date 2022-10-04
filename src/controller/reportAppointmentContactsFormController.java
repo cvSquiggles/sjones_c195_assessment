@@ -95,6 +95,7 @@ public class reportAppointmentContactsFormController implements Initializable {
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
+        Users.homePageLoaded = true;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 

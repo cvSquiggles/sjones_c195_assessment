@@ -6,13 +6,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Users;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,9 +29,6 @@ public class reportAppointmentTotalsFormController implements Initializable {
     public Button homeButton;
     public Button signOutButton;
     public TableView reportTable;
-    public TableColumn typeColumn;
-    public TableColumn monthColumn;
-    public TableColumn totalColumn;
     private ObservableList<ObservableList> data = FXCollections.observableArrayList();
 
     @Override
@@ -65,7 +67,6 @@ public class reportAppointmentTotalsFormController implements Initializable {
                     new SimpleStringProperty(param.getValue().get(j).toString()));
 
             reportTable.getColumns().addAll(col);
-            System.out.println("Column ["+i+"] ");
         }
 
         /********************************
@@ -87,7 +88,6 @@ public class reportAppointmentTotalsFormController implements Initializable {
                     throw new RuntimeException(ex);
                 }
             }
-            System.out.println("Row [1] added "+row );
             data.add(row);
 
         }
@@ -96,35 +96,34 @@ public class reportAppointmentTotalsFormController implements Initializable {
         reportTable.setItems(data);
     }
 
-
-    public void onActionWeekRadio(ActionEvent actionEvent) {
-    }
-
-    public void onActionMonthRadio(ActionEvent actionEvent) {
-    }
-
-    public void onActionPrevButton(ActionEvent actionEvent) {
-    }
-
-    public void onActionNextButton(ActionEvent actionEvent) {
-    }
-
     public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
     }
 
-    public void onActionSignOutButton(ActionEvent actionEvent) {
+    public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
+        Users.currentUser = null;
+        Users.homePageLoaded = true;
+
+        Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
+
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Scheduling Manager v0.1");
+
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void onActionHomeButton(ActionEvent actionEvent) {
-    }
+    public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 
-    public void onActionDeleteButton(ActionEvent actionEvent) {
-    }
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
-    public void onActionEditButton(ActionEvent actionEvent) {
-    }
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Home Page");
 
-    public void onActionAddButton(ActionEvent actionEvent) {
+        stage.setScene(scene);
+        stage.show();
     }
 
 }

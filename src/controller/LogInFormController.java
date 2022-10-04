@@ -67,7 +67,7 @@ public class LogInFormController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        //Code to check if a start or end time overlaps with a customers other meetings.
+        /*Code to check if a start or end time overlaps with a customers other meetings.
         ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse("2022-09-29 14:00:00", formatter);
@@ -98,7 +98,7 @@ public class LogInFormController implements Initializable {
                 System.out.println("This meeting ends during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
             }
             i++;
-        }
+        }*/
     }
 
     /**

@@ -82,6 +82,7 @@ public class AppointmentsViewFormController implements Initializable {
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
+        Users.homePageLoaded = true;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -203,25 +204,6 @@ public class AppointmentsViewFormController implements Initializable {
     }
 
     public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
-        /*if(appointmentsTable.getSelectionModel().isEmpty()) {
-            return;
-        }
-
-        //Get the selected customer from the table
-        Customers selectedAppointment = (Customers) customersTable.getSelectionModel().getSelectedItem();
-
-        try {
-            ResultSet rs = AppointmentsQuery.selectByClient(selectedCustomer.getID());
-            if(rs.next()){
-                Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                alert2.setTitle("This client has appointments in the system.");
-                alert2.setContentText("All appointments associated with a client must be deleted before a client can be removed from the system.");
-                alert2.show();
-                return;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
     }
 
     public void onActionWeekRadio(ActionEvent actionEvent) {

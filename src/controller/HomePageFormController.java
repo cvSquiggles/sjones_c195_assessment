@@ -63,7 +63,18 @@ public class HomePageFormController implements Initializable{
             try {
                 ResultSet rs = AppointmentsQuery.selectByUserWithTime(Users.currentUser.getId(), Users.currentUserTimeZone.toString(), startStampConverted);
                 if(rs.next()){
-                    System.out.println(rs.getString("Title"));
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Upcoming appointment!");
+                    alert.setContentText("ID: " + rs.getInt("Appointment_ID") +  " | Date/Time: " + rs.getString("Start"));
+                    alert.show();
+                    Users.homePageLoaded = true;
+                }
+                else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("No upcoming appointments!");
+                    alert.setContentText("There are no appointments scheduled for you within the next 15 minutes!");
+                    alert.show();
+                    Users.homePageLoaded = true;
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -73,6 +84,7 @@ public class HomePageFormController implements Initializable{
 
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 

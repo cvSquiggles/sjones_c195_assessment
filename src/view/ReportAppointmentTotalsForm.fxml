@@ -50,19 +50,11 @@
                                             <children>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                        <children>
-                                                      <Label text="Appointments -  View by: " />
-                                          <RadioButton fx:id="weekRadio" mnemonicParsing="false" onAction="#onActionWeekRadio" selected="true" text="Week">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="weekMonthToggle" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <RadioButton fx:id="monthRadio" mnemonicParsing="false" onAction="#onActionMonthRadio" text="Month" toggleGroup="$weekMonthToggle" />
+                                                      <Label text="Appointments - Total by Type" />
                                        </children>
                                     </HBox>
                                             </children>
                                         </StackPane>
-                              <Button fx:id="prevButton" minWidth="100.0" mnemonicParsing="false" onAction="#onActionPrevButton" prefWidth="100.0" text="Previous" GridPane.rowIndex="1" />
-                              <Button fx:id="nextButton" minWidth="100.0" mnemonicParsing="false" onAction="#onActionNextButton" prefWidth="100.0" text="Next" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     </children>
                                 </GridPane>
                             </children>
@@ -94,13 +86,7 @@
                     </children></AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <children>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="900.0" spacing="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <children>
-                                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#onActionDeleteButton" prefWidth="65.0" text="Delete" />
-                                <Button fx:id="editButton" mnemonicParsing="false" onAction="#onActionEditButton" prefWidth="65.0" text="Edit" />
-                                <Button fx:id="addButton" mnemonicParsing="false" onAction="#onActionAddButton" prefWidth="65.0" text="Add" />
-                            </children>
-                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="900.0" spacing="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                     </children>
                 </AnchorPane>
 
