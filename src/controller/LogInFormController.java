@@ -18,8 +18,11 @@ import model.Appointments;
 import model.Countries;
 import model.FirstLevelDivisions;
 import model.Users;
-
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -48,7 +51,27 @@ public class LogInFormController implements Initializable {
         Users.currentUserTimeZone = zonedDateTime.getOffset();
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
 
-        System.out.println(Users.currentUserTimeZone);
+        //Write path code!!!!
+        Path path = Paths.get("login_activity.txt");
+        System.out.println(Files.exists(path));
+        if(!Files.exists(path)){
+            try {
+                Files.createFile(path);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try{
+                Files.writeString(path, "Hello World.", StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else{
+            try{
+                Files.writeString(path, "\nHello World.", StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         //Set language package
         Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", Users.currentUserLocale);
