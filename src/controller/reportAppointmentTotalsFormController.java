@@ -32,6 +32,17 @@ public class reportAppointmentTotalsFormController implements Initializable {
     private ObservableList<ObservableList> data = FXCollections.observableArrayList();
 
     @Override
+    /**
+     * Initializes the report page for Appointment Totals
+     * Lambda added to code here to simplify code:
+     * 'col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>) param ->
+     *                     new SimpleStringProperty(param.getValue().get(j).toString()));'
+     * rather than
+     * 'col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){
+     *                    public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+     *                        return new SimpleStringProperty(param.getValue().get(j).toString());
+     *                    }'
+     */
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set time zone label
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
@@ -53,11 +64,12 @@ public class reportAppointmentTotalsFormController implements Initializable {
             throw new RuntimeException(ex);
         }
 
+
         //References code from https://stackoverflow.com/questions/18941093/how-to-fill-up-a-tableview-with-database-data LAMBDA USED HERE!!!!
         for(int i=0 ; i < rsColCount; i++){
             //We are using non property style for making dynamic table
             final int j = i;
-            TableColumn col = null;
+            TableColumn col;
             try {
                 col = new TableColumn(rs.getMetaData().getColumnName(i+1));
             } catch (SQLException ex) {
@@ -69,9 +81,6 @@ public class reportAppointmentTotalsFormController implements Initializable {
             reportTable.getColumns().addAll(col);
         }
 
-        /********************************
-         * Data added to ObservableList *
-         ********************************/
         while(true){
             try {
                 if (!rs.next()) break;
