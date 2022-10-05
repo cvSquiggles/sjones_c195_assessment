@@ -1,11 +1,6 @@
 package controller;
 
 import helper.AppointmentsQuery;
-import helper.CustomersQuery;
-import helper.JDBC;
-import helper.UsersQuery;
-import javafx.beans.property.Property;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -20,14 +15,9 @@ import javafx.stage.Stage;
 import model.*;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.*;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 
 public class AppointmentsViewFormController implements Initializable {
     public Label timeZoneLabel;
@@ -48,6 +38,11 @@ public class AppointmentsViewFormController implements Initializable {
     public ToggleGroup weekMonthToggle;
     public RadioButton monthRadio;
 
+    /**
+     * Populate the appointments table, and set UI label values.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -80,9 +75,15 @@ public class AppointmentsViewFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
+        //Null currentUser data and set homePageLoaded to false to make way for the next user log in.
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -95,6 +96,11 @@ public class AppointmentsViewFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
@@ -108,6 +114,13 @@ public class AppointmentsViewFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Verify an appointment is selected from the table, then prompt the user to confirm deletion.
+     * @throws SQLException
+     * @throws IOException
+     * Lambda is used here in the 'alert.showAndWait().ifPresent(type ->{' to pass in the clicked button.
+     */
     public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
         //Display an alert requesting delete confirmation.
         if(appointmentsTable.getSelectionModel().isEmpty()) {
@@ -121,22 +134,27 @@ public class AppointmentsViewFormController implements Initializable {
         //Get the selected appointment from the table
         Appointments selectedAppointment = (Appointments) appointmentsTable.getSelectionModel().getSelectedItem();
 
+        //Prompt the user for confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Appointment selected for deletion.");
         alert.setContentText("Are you sure you want to delete this appointment?");
         ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, cancelButton);
+        //Show alert and wait for user input.
         alert.showAndWait().ifPresent(type -> {
             if (type.getText() == "Yes") {
                 //Delete the appointment from the appointments table.
                 try {
+                    //Query database for the selected appointment's ID
                     int rowsReturned = AppointmentsQuery.delete(selectedAppointment.getID());
                     if (rowsReturned != 0) {
+                        //Display delete confirmation
                         Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
                         alert3.setTitle("Delete confirmation");
                         alert3.setContentText("Appointment ID " + selectedAppointment.getID() + " of type " + selectedAppointment.getType() + " was deleted successfully.");
                         alert3.show();
+                        //Reload table post delete.
                         if(weekRadio.isSelected()) {
                             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset, Users.currentUserTimeZone.toString());
                             appointmentsTable.setItems(appointmentList);
@@ -162,7 +180,13 @@ public class AppointmentsViewFormController implements Initializable {
     }
 
 
+    /**
+     *
+     * @param actionEvent Get selected appointment from the table, and pass it into the EditAppointmentFormController, then load the EditAppointmentForm
+     * @throws IOException
+     */
     public void onActionEditButton(ActionEvent actionEvent) throws IOException {
+        //Confirm that an appointment is selected.
         if (appointmentsTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Appointment Edit Error");
@@ -176,20 +200,25 @@ public class AppointmentsViewFormController implements Initializable {
             if (selectedAppointment == null) {
                 return;
             }
+            //Pass appointment to the edit form
             EditAppointmentFormController.appointmentToEdit(selectedAppointment);
 
+            //Load edit form
             Parent root = FXMLLoader.load(getClass().getResource("/view/EditAppointmentViewForm.fxml"));
-
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
             Scene scene = new Scene(root, 1200.0, 600.0);
             stage.setTitle("Update Appointment");
-
             stage.setScene(scene);
             stage.show();
         }
     }
 
+    /**
+     *
+     * @param actionEvent
+     * @throws IOException
+     * @throws SQLException
+     */
     public void onActionAddButton(ActionEvent actionEvent) throws IOException, SQLException {
         //Load the Add Customer form.
         Parent root = FXMLLoader.load(getClass().getResource("/view/AddAppointmentViewForm.fxml"));
