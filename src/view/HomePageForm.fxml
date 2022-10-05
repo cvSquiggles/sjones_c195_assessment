@@ -111,7 +111,7 @@
                                     <Font size="24.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="instAppmntButton" mnemonicParsing="false" onAction="#instAppmentButtonOnAction" text="Instrument Appmnt.">
+                              <Button fx:id="testingAppmntButton" mnemonicParsing="false" onAction="#testingAppmentButtonOnAction" text="Testing Log">
                                  <font>
                                     <Font size="24.0" />
                                  </font>

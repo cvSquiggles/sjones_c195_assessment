@@ -139,6 +139,12 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
-    public void instAppmentButtonOnAction(ActionEvent actionEvent) {
+    public void testingAppmentButtonOnAction(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/ReportAppointmentTestingForm.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 1200.0, 600.0);
+        stage.setTitle("Testing Log Report");
+        stage.setScene(scene);
+        stage.show();
     }
 }
