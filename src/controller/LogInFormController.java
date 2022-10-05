@@ -51,28 +51,6 @@ public class LogInFormController implements Initializable {
         Users.currentUserTimeZone = zonedDateTime.getOffset();
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
 
-        //Write path code!!!!
-        Path path = Paths.get("login_activity.txt");
-        System.out.println(Files.exists(path));
-        if(!Files.exists(path)){
-            try {
-                Files.createFile(path);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            try{
-                Files.writeString(path, "Hello World.", StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else{
-            try{
-                Files.writeString(path, "\nHello World.", StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         //Set language package
         Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", Users.currentUserLocale);
 
@@ -89,39 +67,6 @@ public class LogInFormController implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        /*Code to check if a start or end time overlaps with a customers other meetings.
-        ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime start = LocalDateTime.parse("2022-09-29 14:00:00", formatter);
-        LocalDateTime end = LocalDateTime.parse("2022-09-29 15:00:00", formatter);
-
-        try {
-            ResultSet rs = AppointmentsQuery.selectByCustomer(2, Users.currentUserTimeZone.toString());
-            while(rs.next()){
-                Appointments appToAdd = new Appointments(rs.getInt("Appointment_ID"), rs.getString("Title"), rs.getString("Description"),
-                        rs.getString("Location"), rs.getString("Contact_Name"), rs.getString("Type"), rs.getString ("Created_By"),
-                        rs.getString("Start"), rs.getString("End"), rs.getInt("Customer_ID"), rs.getInt("User_ID"),
-                        rs.getInt("Contact_ID"), rs.getString("Customer_Name"));
-
-                appsToCheck.add(appToAdd);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        int i = 0;
-        System.out.println(appsToCheck.size());
-
-        while (i < appsToCheck.size()){
-            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
-                System.out.println("This meeting starts during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
-            }
-            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
-                System.out.println("This meeting ends during another of this client's meetings titled " + appsToCheck.get(i).getTitle() + "!");
-            }
-            i++;
-        }*/
     }
 
     /**
@@ -134,6 +79,7 @@ public class LogInFormController implements Initializable {
 
         String currentUser = null;
         int credentialCheck = UsersQuery.signIn(usernameTextField.getText(), passwordTextField.getText());
+        Path path;
 
         switch (credentialCheck) {
             case 0:
@@ -141,11 +87,56 @@ public class LogInFormController implements Initializable {
                 alert.setTitle("Log in failed.");
                 alert.setContentText("Invalid credentials entered.");
                 alert.show();
+                //Write path code!!!!
+                path = Paths.get("login_activity.txt");
+                System.out.println(Files.exists(path));
+                if(!Files.exists(path)){
+                    try {
+                        Files.createFile(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try{
+                        Files.writeString(path, "FAILED | Username: " + usernameTextField.getText() + " | Timestamp: " + LocalDateTime.now(),
+                                StandardOpenOption.APPEND);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else{
+                    try{
+                        Files.writeString(path, "\nFAILED | Username: " + usernameTextField.getText() + " | Timestamp: " + LocalDateTime.now(),
+                                StandardOpenOption.APPEND);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 usernameTextField.setText("");
                 passwordTextField.setText("");
                 break;
             case 1:
-                System.out.println("This is correct!");
+                //Write path code!!!!
+                path = Paths.get("login_activity.txt");
+                System.out.println(Files.exists(path));
+                if(!Files.exists(path)){
+                    try {
+                        Files.createFile(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try{
+                        Files.writeString(path, "SUCCESS | Username: " + usernameTextField.getText() + " | Timestamp: " + LocalDateTime.now(),
+                                StandardOpenOption.APPEND);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else{
+                    try{
+                        Files.writeString(path, "\nSUCCESS | Username: " + usernameTextField.getText() + " | Timestamp: " + LocalDateTime.now(),
+                                StandardOpenOption.APPEND);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root, 1200.0, 600.0);
