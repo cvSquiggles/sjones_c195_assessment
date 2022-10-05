@@ -1,11 +1,8 @@
 package controller;
 
-import helper.AppointmentsQuery;
 import helper.CountriesQuery;
 import helper.FirstLevelDivisionsQuery;
 import helper.UsersQuery;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.Appointments;
 import model.Countries;
 import model.FirstLevelDivisions;
 import model.Users;
@@ -23,12 +19,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.*;
 import java.net.URL;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -40,6 +33,12 @@ public class LogInFormController implements Initializable {
     public TextField passwordTextField;
     public Button logInButton;
 
+    /**
+     *
+     * @param url
+     * @param resourceBundle
+     * Populate the Login form and gather current user timezone/zoneID, country/divisions lists, etc.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Get currentUserData
@@ -71,25 +70,29 @@ public class LogInFormController implements Initializable {
 
     /**
      *
-     * @param actionEvent When log in button is clicked, verify credentials, and proceed to log in as user if they are correct.
+     * @param actionEvent When log in button is clicked, verify credentials, and proceed to log in as user if they are valid, then navigate to HomePageForm.
      * @throws IOException
      * @throws SQLException
+     * Passes the username and password into the UsersQuery signIn function to determine credential validity.
+     * Writes results of login attempt to 'login_activity.txt' file in the root directory.
      */
     public void onActionLogInButton(ActionEvent actionEvent) throws IOException, SQLException {
 
+        //pass the username and password into the UsersQuery signIn function to determine credential validity.
         String currentUser = null;
         int credentialCheck = UsersQuery.signIn(usernameTextField.getText(), passwordTextField.getText());
         Path path;
 
+        //Switch to evaluate the result of the signIn() attempt.
         switch (credentialCheck) {
             case 0:
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Log in failed.");
                 alert.setContentText("Invalid credentials entered.");
                 alert.show();
-                //Write path code!!!!
                 path = Paths.get("login_activity.txt");
                 System.out.println(Files.exists(path));
+                //Check if login_activity.txt exists, and populate form accordingly.
                 if(!Files.exists(path)){
                     try {
                         Files.createFile(path);
@@ -114,7 +117,7 @@ public class LogInFormController implements Initializable {
                 passwordTextField.setText("");
                 break;
             case 1:
-                //Write path code!!!!
+                //Check if login_activity.txt exists, and populate form accordingly.
                 path = Paths.get("login_activity.txt");
                 System.out.println(Files.exists(path));
                 if(!Files.exists(path)){
@@ -137,6 +140,7 @@ public class LogInFormController implements Initializable {
                         throw new RuntimeException(e);
                     }
                 }
+                //Load HomePageForm
                 Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root, 1200.0, 600.0);
@@ -152,40 +156,6 @@ public class LogInFormController implements Initializable {
                 usernameTextField.setText("");
                 passwordTextField.setText("");
         }
-
-        /*int qCheck = AppointmentsQuery.insert("Title", "The description", "Place", "Cult", currentUser, 2, 1, 2);
-        if (qCheck != 0) {
-            System.out.println("WE put IT in!");
-        }*/
-
-        /*int qCheck = AppointmentsQuery.update("Final Title?", "The description", "Place", "Cult", 2, 1, 2, 7);
-        if (qCheck != 0) {
-            System.out.println("WE altered it!");4
-        }*/
-
-        /*int qCheck = AppointmentsQuery.delete(7);
-        if (qCheck != 0) {
-            System.out.println("WE deleted it!");
-        }*/
-
-        /*ResultSet rs = AppointmentsQuery.select(2);
-        while(rs.next()){
-            int appointmentID = rs.getInt("Appointment_ID");
-            String title = rs.getString("Title");
-            String description = rs.getString("Description");
-            String location = rs.getString("Location");
-            String type = rs.getString("Type");
-            Timestamp start = rs.getTimestamp("Start");
-            Timestamp end = rs.getTimestamp("End");
-            Timestamp created = rs.getTimestamp("Create_Date");
-            String createdBy = rs.getString("Created_By");
-            Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-            String lastUpdatedBy = rs.getString("Last_Updated_By");
-            String customer = rs.getString("Customer_Name");
-            String userName = rs.getString("User_Name");
-            String contactName = rs.getString("Contact_Name");
-        }*/
-
 
     }
 }
