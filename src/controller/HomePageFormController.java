@@ -14,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Appointments;
 import model.Users;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -33,9 +32,14 @@ public class HomePageFormController implements Initializable{
     public Label timeZoneLabel;
     public Button aapmntTotalsButton;
     public Button appmntContactButton;
-    public Button instAppmntButton;
+    public Button testingAppmntButton;
 
 
+    /**
+     * Populate the UI, and display log-in appointment check pop-up if it's the users first time viewing the page since logging in.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -45,7 +49,10 @@ public class HomePageFormController implements Initializable{
         //Set username display
         welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
+        //Check to see if it's the users first time logging in by reading the bool that is flipped on the Users class.
         if (!Users.homePageLoaded){
+            //Check the appointments in the database for any meetings within the next 15 minutes for the current user
+            //and display it in the alert if so.
             ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -82,6 +89,11 @@ public class HomePageFormController implements Initializable{
         }
     }
 
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
         Users.homePageLoaded = false;
@@ -97,12 +109,21 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Close database connection out, and exit the application.
+     */
     public void onActionQuitButton(ActionEvent actionEvent) {
         //Exit the application
         JDBC.closeConnection();
         System.exit(0);
     }
 
+    /**
+     *
+     * @param actionEvent Load the CustomersViewForm.
+     * @throws IOException
+     */
     public void onActionCustomersButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -112,6 +133,11 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Load the AppointmentsViewForm.
+     * @throws IOException
+     */
     public void onActionAppointmentsButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -121,6 +147,11 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Load the ReportAppointmentTotalsForm.
+     * @throws IOException
+     */
     public void appmntTotalsButtonOnAction(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/ReportAppointmentTotalsForm.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -130,6 +161,11 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Load the ReportAppointmentContactsForm.
+     * @throws IOException
+     */
     public void appmentContactButtonOnAction(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/ReportAppointmentContactsForm.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -139,6 +175,11 @@ public class HomePageFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Load the ReportAppointmentTestingForm.
+     * @throws IOException
+     */
     public void testingAppmentButtonOnAction(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/ReportAppointmentTestingForm.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

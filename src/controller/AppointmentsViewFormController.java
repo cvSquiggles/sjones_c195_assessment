@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.*;
 
@@ -182,7 +181,7 @@ public class AppointmentsViewFormController implements Initializable {
 
     /**
      *
-     * @param actionEvent Get selected appointment from the table, and pass it into the EditAppointmentFormController, then load the EditAppointmentForm
+     * @param actionEvent Get selected appointment from the table, and pass it into the EditAppointmentFormController,then load the EditAppointmentForm
      * @throws IOException
      */
     public void onActionEditButton(ActionEvent actionEvent) throws IOException {
@@ -215,7 +214,7 @@ public class AppointmentsViewFormController implements Initializable {
 
     /**
      *
-     * @param actionEvent
+     * @param actionEvent Load the AddAppointmentViewForm
      * @throws IOException
      * @throws SQLException
      */
@@ -232,9 +231,10 @@ public class AppointmentsViewFormController implements Initializable {
         stage.show();
     }
 
-    public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
-    }
-
+    /**
+     *
+     * @param actionEvent Sort appointments table by week filtering, so that the previous and next buttons flip through weeks.
+     */
     public void onActionWeekRadio(ActionEvent actionEvent) {
         try {
             dateOffset = 0;
@@ -245,6 +245,10 @@ public class AppointmentsViewFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent Sort appointments table by month filtering, so that the previous and next buttons flip through months.
+     */
     public void onActionMonthRadio(ActionEvent actionEvent) {
         try {
             dateOffset = 0;
@@ -255,6 +259,10 @@ public class AppointmentsViewFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent Update the appointmentsTable with a fresh query of the table with update dateOffset -1
+     */
     public void onActionPrevButton(ActionEvent actionEvent) {
         if (weekRadio.isSelected()) {
             try {
@@ -277,6 +285,10 @@ public class AppointmentsViewFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent Update the appointmentsTable with a fresh query of the table with update dateOffset +1
+     */
     public void onActionNextButton(ActionEvent actionEvent) {
         if (weekRadio.isSelected()) {
             try {
