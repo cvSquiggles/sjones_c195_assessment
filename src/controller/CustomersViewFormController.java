@@ -2,10 +2,6 @@ package controller;
 
 import helper.AppointmentsQuery;
 import helper.CustomersQuery;
-import helper.JDBC;
-import helper.UsersQuery;
-import javafx.beans.property.Property;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -18,19 +14,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.*;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.*;
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import static controller.EditCustomerFormController.customerToEdit;
 
-import static controller.ModifyPartFormController.partToChange;
 
 public class CustomersViewFormController implements Initializable{
     public TableView customersTable;

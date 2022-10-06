@@ -71,7 +71,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="142.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <TableView fx:id="appointmentsTable" layoutX="-105.0" onMouseClicked="#onMouseClickAppointmentsTable" prefHeight="481.0" prefWidth="1101.0">
+                        <TableView fx:id="appointmentsTable" layoutX="-105.0" prefHeight="481.0" prefWidth="1101.0">
                             <columns>
                                 <TableColumn fx:id="idColumn" prefWidth="40.0" text="ID" />
                                 <TableColumn fx:id="titleColumn" prefWidth="100.0" text="Title" />
