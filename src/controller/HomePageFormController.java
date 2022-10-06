@@ -36,7 +36,7 @@ public class HomePageFormController implements Initializable{
 
 
     /**
-     * Populate the UI, and display log-in appointment check pop-up if it's the users first time viewing the page since logging in.
+     * Populate the UI, and display log-in appointment check pop-up if it's the users first time viewing the page since logging in
      * @param url
      * @param resourceBundle
      */
@@ -91,7 +91,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form
      * @throws IOException
      */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
@@ -111,7 +111,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Close database connection out, and exit the application.
+     * @param actionEvent Close database connection out, and exit the application
      */
     public void onActionQuitButton(ActionEvent actionEvent) {
         //Exit the application
@@ -121,7 +121,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Load the CustomersViewForm.
+     * @param actionEvent Load the CustomersViewForm
      * @throws IOException
      */
     public void onActionCustomersButton(ActionEvent actionEvent) throws IOException {
@@ -135,7 +135,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Load the AppointmentsViewForm.
+     * @param actionEvent Load the AppointmentsViewForm
      * @throws IOException
      */
     public void onActionAppointmentsButton(ActionEvent actionEvent) throws IOException {
@@ -149,7 +149,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Load the ReportAppointmentTotalsForm.
+     * @param actionEvent Load the ReportAppointmentTotalsForm
      * @throws IOException
      */
     public void appmntTotalsButtonOnAction(ActionEvent actionEvent) throws IOException {
@@ -163,7 +163,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Load the ReportAppointmentContactsForm.
+     * @param actionEvent Load the ReportAppointmentContactsForm
      * @throws IOException
      */
     public void appmentContactButtonOnAction(ActionEvent actionEvent) throws IOException {
@@ -177,7 +177,7 @@ public class HomePageFormController implements Initializable{
 
     /**
      *
-     * @param actionEvent Load the ReportAppointmentTestingForm.
+     * @param actionEvent Load the ReportAppointmentTestingForm
      * @throws IOException
      */
     public void testingAppmentButtonOnAction(ActionEvent actionEvent) throws IOException {
