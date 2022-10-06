@@ -15,7 +15,6 @@ import model.Appointments;
 import model.Contacts;
 import model.Customers;
 import model.Users;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -47,14 +46,19 @@ public class EditAppointmentFormController implements Initializable {
     public Button homeButton;
     public Button cancelButton;
     public Button createButton;
-    private static Appointments appointmentToEdit = null;
+    private static Appointments appointmentToEdit = null; //Appointments Object to allow passing in an Appointments object from another form
     public ComboBox userComboBox;
 
-    public static void appointmentToEdit(Appointments passAppointment) {appointmentToEdit = passAppointment;}
+    public static void appointmentToEdit(Appointments passAppointment) {appointmentToEdit = passAppointment;} //Functionality to pass in Appointments
     private ObservableList<Customers> customerList = FXCollections.observableArrayList();
     private ObservableList<Contacts> contactList = FXCollections.observableArrayList();
     private ObservableList<Users> userList = FXCollections.observableArrayList();
 
+    /**
+     * Populate UI, as well as form options, and set form fields to those passed in with the appointmentToEdit method
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -115,10 +119,12 @@ public class EditAppointmentFormController implements Initializable {
             throw new RuntimeException(e);
         }
 
+        //Populate text fields
         titleTextField.setText(appointmentToEdit.getTitle());
         descriptionTextField.setText(appointmentToEdit.getDescription());
         locationTextField.setText(appointmentToEdit.getLocation());
         typeTextField.setText(appointmentToEdit.getType());
+        //Iterate through combo boxes and select the proper options based on index
         int i = 0;
 
         while (i < userComboBox.getItems().size()){
@@ -158,8 +164,7 @@ public class EditAppointmentFormController implements Initializable {
         endampmChoiceBox.getItems().add("PM");
         endampmChoiceBox.getSelectionModel().selectFirst();
 
-        //Setup start date-time options based on the appoinment you're editing.
-
+        //Setup start date-time options based on the appointment you're editing.
         //Populate start time choice boxes
         i = 1;
         while (i < 13) {
@@ -202,7 +207,7 @@ public class EditAppointmentFormController implements Initializable {
 
         endMinuteChoiceBox.getSelectionModel().selectFirst();
         endampmChoiceBox.getSelectionModel().selectFirst();
-
+        //Trim the start date/time stamp to highlight the proper hour, minute, and ampm options
         String dtStart = appointmentToEdit.getStart();
 
         int indexOfTimeS = dtStart.indexOf(" ");
@@ -221,7 +226,7 @@ public class EditAppointmentFormController implements Initializable {
         } else{
             ampm = "AM";
         }
-
+        //Setup LocalDate object to properly format date end for the datePicker.
         LocalDate daS = LocalDate.parse(dS, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         startDatePicker.setValue(daS);
         hourChoiceBox.getSelectionModel().select(hS);
@@ -229,6 +234,7 @@ public class EditAppointmentFormController implements Initializable {
         ampmChoiceBox.getSelectionModel().select(ampm);
 
         //Setup end date-time options based on the appoinment you're editing.
+        //Trim the end date/time stamp to highlight the proper hour, minute, and ampm options
         String dtEnd = appointmentToEdit.getEnd();
 
         int indexOfTimeE = dtEnd.indexOf(" ");
@@ -246,16 +252,19 @@ public class EditAppointmentFormController implements Initializable {
         } else{
             ampm = "AM";
         }
-
+        //Setup LocalDate object to properly format date end for the datePicker.
         LocalDate daE = LocalDate.parse(dE, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        System.out.println("Start: " + daS);
-        System.out.println("End: " + daE);
         endDatePicker.setValue(daE);
         endHourChoiceBox.getSelectionModel().select(hE);
         endMinuteChoiceBox.getSelectionModel().select(mE);
         endampmChoiceBox.getSelectionModel().select(ampm);
     }
 
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
         Users.homePageLoaded = true;
@@ -271,6 +280,11 @@ public class EditAppointmentFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 
@@ -283,6 +297,11 @@ public class EditAppointmentFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Return to the AppointmentsViewForm
+     * @throws IOException
+     */
     public void onActionCancelButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
 
@@ -295,8 +314,14 @@ public class EditAppointmentFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Verify essential information was filled out properly, then submit it to the SQL database as an update to the passed in appointment
+     * @throws SQLException
+     * @throws IOException
+     */
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
-
+        //Verify that a customer, contact and user are selected
         try {
             int customerID = Customers.customerOptions.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID();
             int contactID = Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID();
@@ -309,7 +334,7 @@ public class EditAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
-
+        //Verify that a title was entered
         try{
             String title = titleTextField.getText();
         }
@@ -320,9 +345,9 @@ public class EditAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
-
+        //Verify that a description was entered
         try{
-            String title = descriptionTextField.getText();
+            String desc = descriptionTextField.getText();
         }
         catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -331,9 +356,9 @@ public class EditAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
-
+        //Verify that a location was entered
         try{
-            String title = locationTextField.getText();
+            String loc = locationTextField.getText();
         }
         catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -342,9 +367,9 @@ public class EditAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
-
+        //Verify that a type was entered
         try{
-            String title = typeTextField.getText();
+            String type = typeTextField.getText();
         }
         catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -353,7 +378,7 @@ public class EditAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
-
+        //Initialize variables to capture form data
         String startDateTime = "";
         String endDateTime = "";
         String timeZoneOffset = Users.currentUserTimeZone.toString();
@@ -365,7 +390,7 @@ public class EditAppointmentFormController implements Initializable {
             startDayFormat = "-0";
         }
         if (startDatePicker.getValue().getMonthValue() < 10) {
-            //Get start date/time stamp
+            //Get start date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.
             if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
                         startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
@@ -378,17 +403,15 @@ public class EditAppointmentFormController implements Initializable {
                 //System.out.println(startDateTime);
             }
         } else{
-            //Get start date/time stamp
+            //Get start date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.
             if (ampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
                         startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-                //System.out.println(startDateTime);
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
                         startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-                //System.out.println(startDateTime);
             }
         }
 
@@ -397,7 +420,7 @@ public class EditAppointmentFormController implements Initializable {
             endDayFormat = "-0";
         }
         if (endDatePicker.getValue().getMonthValue() < 10) {
-            //Get end date/time stamp
+            //Get end date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.
             if (endampmChoiceBox.getSelectionModel().getSelectedItem().toString() == "PM" && Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) != 12) {
                 endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
                         endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
@@ -419,7 +442,9 @@ public class EditAppointmentFormController implements Initializable {
             }
         }
 
-        //Query to verify date/times are valid
+        //Query to verify date/times are valid within constraints
+        //To learn TIME_DIFF/TIMESTAMPDIFF, referenced https://stackoverflow.com/questions/4759248/difference-between-two-dates-in-mysql and,
+        //https://www.w3schools.com/sql/func_mysql_timediff.asp
         String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End, TIMEDIFF(?, ?) as Diff, " +
                 "TIMESTAMPDIFF(SECOND, ?, ?) as DiffSeconds";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -441,13 +466,13 @@ public class EditAppointmentFormController implements Initializable {
         String diff = rs.getString("Diff");
         int diffSeconds = rs.getInt("DiffSeconds");
 
+        //Pull values from the start/end times queried to compare against
         int startConvertedValue = Integer.parseInt(startConverted.substring((startConverted.indexOf(':')-2), (startConverted.indexOf(':'))));
-        int startConvertedValueMin = Integer.parseInt(startConverted.substring((startConverted.indexOf(':') + 1), (startConverted.indexOf(':') + 3)));
         int endConvertedValue = Integer.parseInt(endConverted.substring((endConverted.indexOf(':')-2), (endConverted.indexOf(':'))));
         int endConvertedValueMin = Integer.parseInt(endConverted.substring((endConverted.indexOf(':') + 1), (endConverted.indexOf(':') + 3)));
         int diffInHours = Integer.parseInt(diff.substring((diff.indexOf(':') - 2), (diff.indexOf(':'))));
 
-        //Referenced https://www.w3schools.com/sql/func_mysql_timediff.asp
+        //If start is after end, fail and alert user
         if (diffSeconds < 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Meeting time logic error");
@@ -456,6 +481,7 @@ public class EditAppointmentFormController implements Initializable {
             return;
         }
 
+        //If Meeting is longer than business hours allow, fail and alert user
         if (diffInHours >= 14){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Meeting is longer than business hours allow.");
@@ -464,6 +490,7 @@ public class EditAppointmentFormController implements Initializable {
             return;
         }
 
+        //If meeting starts before 8am EST, or after 10pm EST, fail and alert user
         if (startConvertedValue < 8 || startConvertedValue >= 22){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Meeting starts outside of business hours!");
@@ -472,6 +499,7 @@ public class EditAppointmentFormController implements Initializable {
             return;
         }
 
+        //If meeting ends after 10pm EST, fail and alert user
         if (endConvertedValue < 8 || (endConvertedValue >= 22 && endConvertedValueMin > 0)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Meeting ends outside of business hours!");
@@ -485,7 +513,7 @@ public class EditAppointmentFormController implements Initializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime start = LocalDateTime.parse(startDateTime, formatter);
         LocalDateTime end = LocalDateTime.parse(endDateTime, formatter);
-
+        //Query for the selected customer's meetings already in the database, then compare them against the new meetings date/times.
         try {
             ResultSet rs2 = AppointmentsQuery.selectByCustomer(2, Users.currentUserTimeZone.toString());
             while(rs2.next()){
@@ -519,11 +547,13 @@ public class EditAppointmentFormController implements Initializable {
             i++;
         }
 
+        //After passing checks, run AppointmentsQuery.insert, and either load the AppointmentsViewForm, or display an error if the appointment wasn't updated successfully.
         if (AppointmentsQuery.update(titleTextField.getText(), descriptionTextField.getText(), locationTextField.getText(),
                 typeTextField.getText(), customerList.get(customerComboBox.getSelectionModel().getSelectedIndex()).getID(),
                 Users.currentUser.getUserName(), contactList.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
                 appointmentToEdit.getID(), userList.get(userComboBox.getSelectionModel().getSelectedIndex()).getId(),
                 startDateTime, endDateTime, timeZoneOffset) != 0){
+
             Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentsViewForm.fxml"));
 
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
