@@ -415,7 +415,7 @@ public class EditAppointmentFormController implements Initializable {
             }
         }
 
-        //ensure month is double value is double-digit for date/time formatter checks ahead as well as day
+        //Ensure month is double value is double-digit for date/time formatter checks ahead as well as day
         if(endDatePicker.getValue().getDayOfMonth() < 10){
             endDayFormat = "-0";
         }
