@@ -63,7 +63,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="142.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <children>
-                        <TableView fx:id="reportTable" layoutX="-105.0" onMouseClicked="#onMouseClickAppointmentsTable" prefHeight="481.0" prefWidth="1101.0" />
+                        <TableView fx:id="reportTable" layoutX="-105.0" prefHeight="481.0" prefWidth="1101.0" />
                     </children></AnchorPane>
                 <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <AnchorPane prefHeight="129.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />

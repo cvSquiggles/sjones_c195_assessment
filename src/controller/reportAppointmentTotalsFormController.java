@@ -12,11 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Users;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -29,7 +27,7 @@ public class reportAppointmentTotalsFormController implements Initializable {
     public Button homeButton;
     public Button signOutButton;
     public TableView reportTable;
-    private ObservableList<ObservableList> data = FXCollections.observableArrayList();
+    private ObservableList<ObservableList> data = FXCollections.observableArrayList(); //List to populate with query results
 
     @Override
     /**
@@ -105,12 +103,14 @@ public class reportAppointmentTotalsFormController implements Initializable {
         reportTable.setItems(data);
     }
 
-    public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
-    }
-
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -122,7 +122,11 @@ public class reportAppointmentTotalsFormController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 

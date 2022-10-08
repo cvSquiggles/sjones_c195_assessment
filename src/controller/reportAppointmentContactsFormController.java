@@ -12,12 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Appointments;
 import model.Contacts;
 import model.Users;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -45,6 +43,11 @@ public class reportAppointmentContactsFormController implements Initializable {
     public Button nextButton;
     public ComboBox contactComboBox;
 
+    /**
+     * Populate UI as well as comboBox options with list of contacts to query the database for
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set time zone label
@@ -93,9 +96,14 @@ public class reportAppointmentContactsFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -107,7 +115,11 @@ public class reportAppointmentContactsFormController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
@@ -121,6 +133,10 @@ public class reportAppointmentContactsFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Sort appointments table by week filtering, so that the previous and next buttons flip through weeks.
+     */
     public void onActionWeekRadio(ActionEvent actionEvent) {
         try {
             dateOffset = 0;
@@ -133,6 +149,10 @@ public class reportAppointmentContactsFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent Sort appointments table by month filtering, so that the previous and next buttons flip through months.
+     */
     public void onActionMonthRadio(ActionEvent actionEvent) {
         try {
             dateOffset = 0;
@@ -145,6 +165,10 @@ public class reportAppointmentContactsFormController implements Initializable {
         }
     }
 
+    /**
+     * Update the appointmentsTable with a fresh query of the table with update dateOffset -1
+     * @param actionEvent
+     */
     public void onActionPrevButton(ActionEvent actionEvent) {
         if (weekRadio.isSelected()) {
             try {
@@ -171,6 +195,10 @@ public class reportAppointmentContactsFormController implements Initializable {
         }
     }
 
+    /**
+     * Update the appointmentsTable with a fresh query of the table with update dateOffset +1
+     * @param actionEvent
+     */
     public void onActionNextButton(ActionEvent actionEvent) {
         if (weekRadio.isSelected()) {
             try {
@@ -197,7 +225,13 @@ public class reportAppointmentContactsFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent on selection of a contact, query the database for that contacts' appointments, and then refresh the table with the new query result
+     * @throws SQLException
+     */
     public void onActionContactComboBox(ActionEvent actionEvent) throws SQLException {
+        //Reset dateOffset, then rerun selectContactAppointmentsList according to radio button highlighted.
         dateOffset = 0;
         if (weekRadio.isSelected()) {
             ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,

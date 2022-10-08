@@ -299,7 +299,7 @@ public class AppointmentsQuery {
                 "JOIN Users as u on a.User_ID = u.User_ID " +
                 "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
                 "JOIN Contacts as co on a.Contact_ID = co.Contact_ID " +
-                "WHERE Type LIKE 'test%' OR Type LIKE 'Test%'" +
+                "WHERE Type LIKE '%test%' OR Type LIKE '%Test%'" +
                 "ORDER BY Start ASC";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 

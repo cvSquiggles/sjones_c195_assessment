@@ -12,20 +12,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Appointments;
 import model.Users;
-
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ReportAppointmentTestingFormController implements Initializable {
-
     public TableView appointmentsTable;
     public TableColumn idColumn;
     public TableColumn titleColumn;
@@ -40,6 +35,11 @@ public class ReportAppointmentTestingFormController implements Initializable {
     public Label currentUserLabel_customersView;
     public Label timeZoneLabel;
 
+    /**
+     * Populate UI, and query database for all appointments with a type containing the string of characters 'test', or 'Test'
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set time zone label
@@ -69,12 +69,14 @@ public class ReportAppointmentTestingFormController implements Initializable {
 
     }
 
-    public void onMouseClickAppointmentsTable(MouseEvent mouseEvent) {
-    }
-
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -87,6 +89,11 @@ public class ReportAppointmentTestingFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 
