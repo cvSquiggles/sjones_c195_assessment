@@ -2,14 +2,17 @@ package helper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Countries;
 import model.FirstLevelDivisions;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FirstLevelDivisionsQuery {
+    /**
+     *
+     * @return an ObservableList of the first-level divisions stored in the database
+     * @throws SQLException
+     */
     public static ObservableList<FirstLevelDivisions> select() throws SQLException {
         String sql = "SELECT * FROM first_level_divisions";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -27,6 +30,12 @@ public class FirstLevelDivisionsQuery {
         return divisionsList;
     }
 
+    /**
+     *
+     * @param countryName the name of the country to search for associated first-level divisions
+     * @return an ObservableList of first-level divisions associated with the provided country name
+     * @throws SQLException
+     */
     public static ObservableList<FirstLevelDivisions> select(String countryName) throws SQLException {
         String sql = "SELECT Country_ID FROM countries WHERE Country = ?";
         PreparedStatement ps1 = JDBC.getConnection().prepareStatement(sql);

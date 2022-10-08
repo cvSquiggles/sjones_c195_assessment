@@ -1,7 +1,6 @@
 package helper;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.DriverManager;
 
 public abstract class JDBC {
@@ -16,6 +15,9 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * Open a connection to the database
+     */
     public static void openConnection()
     {
         try {
@@ -29,10 +31,17 @@ public abstract class JDBC {
         }
     }
 
+    /**
+     *
+     * @return the current connection to the database
+     */
     public static Connection getConnection(){
         return connection;
     }
 
+    /**
+     * Close the connection to the database
+     */
     public static void closeConnection() {
         try {
             connection.close();

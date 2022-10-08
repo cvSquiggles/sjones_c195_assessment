@@ -17,7 +17,6 @@ public class Main extends Application {
      * @param stage stage to render the MainForm.  Parent root will be used throughout the program.
      * @throws Exception
      */
-
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
@@ -33,7 +32,6 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         JDBC.openConnection();
-
         Users.currentUser = null;
         launch(args);
         JDBC.closeConnection();

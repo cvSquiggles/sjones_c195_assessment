@@ -20,6 +20,22 @@ public class Appointments {
     private String contactName;
     private int contactID;
 
+    /**
+     *
+     * @param id
+     * @param title
+     * @param description
+     * @param location
+     * @param contactName
+     * @param type
+     * @param createdBy
+     * @param start
+     * @param end
+     * @param customerID
+     * @param userID
+     * @param contactID
+     * @param customerName
+     */
     public Appointments(int id, String title, String description, String location, String contactName, String type, String createdBy,
                         String start, String end ,int customerID, int userID, int contactID, String customerName){
         this.id = id;
@@ -40,30 +56,76 @@ public class Appointments {
         endStamp = LocalDateTime.parse(end, formatter);
     }
 
+    /**
+     *
+     * @return the appointment ID
+     */
     public int getID() {return id;}
+
+    /**
+     *
+     * @return the customer name associated with the appointment
+     */
     public String getCustomerName() {return customerName;}
 
+    /**
+     *
+     * @return the title of the associated appointment
+     */
     public String getTitle() {return title;}
 
+    /**
+     *
+     * @return the description of the associated appointment
+     */
     public String getDescription() {return description;}
 
+    /**
+     *
+     * @return the location of the associated appointment
+     */
     public String getLocation() {return location;}
 
+    /**
+     *
+     * @return the type of the associated appointment
+     */
     public String getType() {return type;}
 
-    public String getCreatedBy() {return createdBy;}
-
+    /**
+     *
+     * @return the start date/time of the associated appointment as a string
+     */
     public String getStart() {return start;}
+
+    /**
+     *
+     * @return the start date/time of the associated appointment as a LocalDateTime
+     */
     public LocalDateTime getStartStamp() {return startStamp;}
 
+    /**
+     *
+     * @return the end date/time of the associated appointment as a string
+     */
     public String getEnd() {return end;}
+
+    /**
+     *
+     * @return the end date/time of the associated appointment as a LocalDateTime
+     */
     public LocalDateTime getEndStamp() {return endStamp;}
 
+    /**
+     *
+     * @return the name of the contact tied to the associated appointment
+     */
     public String getContactName() {return contactName;}
 
-    public int getCustomerID() {return customerID;}
-
+    /**
+     *
+     * @return the ID of the user tied to the associated appointment
+     */
     public int getUserID() {return userID;}
 
-    public int getContactID() {return contactID;}
 }
