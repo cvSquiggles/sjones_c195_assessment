@@ -3,14 +3,16 @@ package helper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Customers;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public class CustomersQuery {
-
+    /**
+     * Query the database for the available customers in the database
+     * @return an ObservableList of the customers that exist in the database
+     * @throws SQLException
+     */
     public static ObservableList<Customers> selectCustomerList() throws SQLException {
         String sql = "SELECT cs.*, d.Division FROM customers as cs JOIN first_level_divisions as d ON cs.Division_ID = d.Division_ID";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -30,7 +32,14 @@ public class CustomersQuery {
         return customerList;
     }
 
+    /**
+     * Query the database for the index of a customers' country, and division
+     * @param divID the ID of the division to search for
+     * @return an array of integers
+     * @throws SQLException
+     */
     public static int[]selectCountryDiv(int divID) throws SQLException{
+        //Setup an integer array to store the index of the division and the country we find in the database
         int[] countryDiv = new int[]{0,0};
         String sql = "SELECT * FROM first_level_divisions";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -38,13 +47,13 @@ public class CustomersQuery {
         ResultSet rs = ps.executeQuery();
 
         int countryID = 0;
-
+        //Find the division that matches the id of the division we passed in, and use this to get the ID of the associated country
         while(rs.next()){
             if(divID == rs.getInt("Division_ID")){
                 countryID = rs.getInt("Country_ID");
             }
         }
-
+        //Query the divisions for the country ID we found before
         String sql3 = "SELECT * FROM first_level_divisions WHERE Country_ID = ?";
         PreparedStatement ps3 = JDBC.getConnection().prepareStatement(sql3);
 
@@ -52,23 +61,24 @@ public class CustomersQuery {
         ResultSet rs3 = ps3.executeQuery();
 
         int i0 = 0;
-
+        //Iterate through this result set to find the index of the record where division ID matches the division ID initially passed in
         while(rs3.next()){
             if(divID == rs3.getInt("Division_ID")){
+                //Set the first index for division to i0
                 countryDiv[0] = i0;
             }
             else {
                 i0++;
             }
         }
-
+        //Query the countries table
         String sql2 = "SELECT * FROM countries";
         PreparedStatement ps2 = JDBC.getConnection().prepareStatement(sql2);
 
         ResultSet rs2 = ps2.executeQuery();
 
         int i1 = 0;
-
+        //Iterate through the countries table to find the index of the country that corresponds to the country ID we found earlier
         while(rs2.next()){
             if(countryID == rs2.getInt("Country_ID")){
                 countryDiv[1] = i1;
@@ -81,6 +91,18 @@ public class CustomersQuery {
         return countryDiv;
     }
 
+    /**
+     *
+     * @param name the name of the customer to create
+     * @param address the address of the customer to create
+     * @param zip the zip of the customer to create
+     * @param phone the phone number of the customer to create
+     * @param user the name of the user creating the customer
+     * @param division the division of the customer to create
+     * @param timeZoneOffset the time zone offset of the current user
+     * @return an integer to indicate whether the update was successful, non-zero value indicating success
+     * @throws SQLException
+     */
     public static int createCustomer(String name, String address, String zip, String phone, String user, String division, String timeZoneOffset) throws SQLException {
         String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -104,11 +126,22 @@ public class CustomersQuery {
         ps2.setString(8, user);
         ps2.setInt(9, rs.getInt("Division_ID"));
 
-        int rowsReturned = ps2.executeUpdate();
-
-        return rowsReturned;
+        return ps2.executeUpdate();
     }
 
+    /**
+     *
+     * @param name the name of the customer to update
+     * @param address the address of the customer to update
+     * @param zip the zip of the customer to update
+     * @param phone the phone number of the customer to update
+     * @param currentUser the name of the user updating the customer
+     * @param timeZoneOffset the current users time zone offset
+     * @param division the division of the customer to update
+     * @param customerID the ID of the customer to update
+     * @return an integer to indicate whether the update was successful, non-zero value indicating success
+     * @throws SQLException
+     */
     public static int updateCustomer(String name, String address, String zip, String phone, String currentUser, String timeZoneOffset, String division, int customerID) throws SQLException {
         String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
@@ -132,19 +165,22 @@ public class CustomersQuery {
         ps2.setInt(7, rs.getInt("Division_ID"));
         ps2.setInt(8, customerID);
 
-        int rowsReturned = ps2.executeUpdate();
-
-        return rowsReturned;
+        return ps2.executeUpdate();
     }
 
+    /**
+     *
+     * @param id the ID of the customer to delete
+     * @return an integer to indicate whether the update was successful, non-zero value indicating success
+     * @throws SQLException
+     */
     public static int deleteCustomer(int id) throws SQLException {
         String sql = "DELETE FROM customers WHERE Customer_ID = ?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
         ps.setInt(1, id);
 
-        int rowsReturned = ps.executeUpdate();
-        return rowsReturned;
+        return ps.executeUpdate();
     }
 
 }
