@@ -10,18 +10,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.*;
-
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -40,12 +33,17 @@ public class EditCustomerFormController implements Initializable {
     public Button homeButton;
     public Button cancelButton;
     public Button createButton;
-    public ObservableList<String> countryOptionsComboList = FXCollections.observableArrayList();
-    public ObservableList<String> divisionOptionsComboList = FXCollections.observableArrayList();
+    public ObservableList<String> countryOptionsComboList = FXCollections.observableArrayList(); //List to populate with country options
+    public ObservableList<String> divisionOptionsComboList = FXCollections.observableArrayList(); //List to populate with division options
 
-    public static void customerToEdit(Customers passCustomer) {customerToEdit = passCustomer;}
-    public static void customerCountryDiv(int[] passCountryDiv) {countryDiv = passCountryDiv;}
+    public static void customerToEdit(Customers passCustomer) {customerToEdit = passCustomer;}  //Function to pass in a customer object
+    public static void customerCountryDiv(int[] passCountryDiv) {countryDiv = passCountryDiv;}  //Function to pass in a selected customers' countryDivision info
 
+    /**
+     * Populate UI, as well as combo box list options, and populate form based on information passed in from customerToEdit(), and customerCountryDiv()
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -55,6 +53,7 @@ public class EditCustomerFormController implements Initializable {
         //Set username display
         welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
+        //Iterate through the country options and add them to the countryOptionsComboList
         int i = 0;
         while(i < Countries.countryOptions.size()){
             try {
@@ -65,10 +64,11 @@ public class EditCustomerFormController implements Initializable {
             }
             i++;
         }
-
+        //Assign the countryOptionsComboList to the countryComboBox, then set it to the value that was passed in
         countryComboBox.setItems(countryOptionsComboList);
         countryComboBox.getSelectionModel().select(countryDiv[1]);
 
+        //Refresh i, and iterate through the firstLevelDivisions options to populate the divisionOptionsComboList
         i = 0;
         try {
             FirstLevelDivisions.divisionOptionsFiltered = FirstLevelDivisionsQuery.select(countryComboBox.getSelectionModel().getSelectedItem().toString());
@@ -84,10 +84,10 @@ public class EditCustomerFormController implements Initializable {
             }
             i++;
         }
-
+        //Assign the divisionOptionsComboList to the divisionComboBox
         divisionComboBox.setItems(divisionOptionsComboList);
 
-        //Populate text fields
+        //Populate text fields, and set divisionComboBox to the value passed in
         nameTextField.setText(customerToEdit.getName());
         addressTextField.setText(customerToEdit.getAddress());
         zipTextField.setText(customerToEdit.getPostalCode());
@@ -95,7 +95,13 @@ public class EditCustomerFormController implements Initializable {
         divisionComboBox.getSelectionModel().select(countryDiv[0]);
     }
 
+    /**
+     *
+     * @param actionEvent on selection of a country, query the database for divisions associated with that country, and repopulate the divisionComboBox options
+     * @throws SQLException
+     */
     public void onActionCountryComboBox(ActionEvent actionEvent) throws SQLException {
+        //Clear the divisionOptionsComboList and iterate through the divisions associated with the country selected
         int i = 0;
         divisionOptionsComboList.clear();
         FirstLevelDivisions.divisionOptionsFiltered = FirstLevelDivisionsQuery.select(countryComboBox.getSelectionModel().getSelectedItem().toString());
@@ -112,12 +118,14 @@ public class EditCustomerFormController implements Initializable {
         divisionComboBox.getSelectionModel().clearSelection();
     }
 
-    public void onActionDivisionComboBox(ActionEvent actionEvent) {
-    }
-
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -129,7 +137,11 @@ public class EditCustomerFormController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
 
@@ -141,7 +153,11 @@ public class EditCustomerFormController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     *
+     * @param actionEvent Return to the CustomersViewForm
+     * @throws IOException
+     */
     public void onActionCancelButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
 
@@ -154,19 +170,91 @@ public class EditCustomerFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+      * @param actionEvent Verify essential information was filled out properly,
+     *                    then submit it to the SQL database as a customer update
+     * @throws SQLException
+     * @throws IOException
+     */
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
-        CustomersQuery.updateCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(),
-                Users.currentUser.getUserName(), Users.currentUserTimeZone.toString(), divisionComboBox.getSelectionModel().getSelectedItem().toString(), customerToEdit.getID());
+        //Verify that a name was entered
+        try{
+            String name = nameTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Name entry error!");
+            alert.setContentText("Please enter a valid name.");
+            alert.show();
+            return;
+        }
+        //Verify that an address was entered
+        try{
+            String address = addressTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Address entry error!");
+            alert.setContentText("Please enter a valid address.");
+            alert.show();
+            return;
+        }
+        //Verify that a zip was entered
+        try{
+            String zip = zipTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Zip entry error!");
+            alert.setContentText("Please enter a valid zip.");
+            alert.show();
+            return;
+        }
+        //Verify that a phone was entered
+        try{
+            String phone = phoneTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Phone entry error!");
+            alert.setContentText("Please enter a valid phone.");
+            alert.show();
+            return;
+        }
+        //Verify that a division was selected
+        if(divisionComboBox.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Division selection error!");
+            alert.setContentText("Please enter a valid division.");
+            alert.show();
+            return;
+        }
+        //Verify that a division was selected
+        if(countryComboBox.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Country selection error!");
+            alert.setContentText("Please enter a valid country.");
+            alert.show();
+            return;
+        }
+        //After passing checks, run customersQuery.createCustomer, and either load the CustomersViewForm, or display an error if the customer wasn't created successfully.
+        if(CustomersQuery.updateCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(), phoneTextField.getText(),
+                Users.currentUser.getUserName(), Users.currentUserTimeZone.toString(), divisionComboBox.getSelectionModel().getSelectedItem().toString(), customerToEdit.getID()) != 0) {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
 
-        Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
+            Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
 
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1200.0, 600.0);
+            stage.setTitle("Customers Page");
 
-        Scene scene = new Scene(root, 1200.0, 600.0);
-        stage.setTitle("Customers Page");
-
-        stage.setScene(scene);
-        stage.show();
-
+            stage.setScene(scene);
+            stage.show();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unable to update customer with the provided information!");
+            alert.setContentText("Something must be wrong.");
+            alert.show();
+        }
     }
 }

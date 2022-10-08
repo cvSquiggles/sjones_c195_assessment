@@ -11,13 +11,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Countries;
-import model.Customers;
 import model.FirstLevelDivisions;
 import model.Users;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -31,12 +28,16 @@ public class AddCustomerFormController implements Initializable {
     public TextField phoneTextField;
     public ComboBox countryComboBox;
     public ComboBox divisionComboBox;
-
     public ObservableList<String> countryOptionsComboList = FXCollections.observableArrayList();
     public ObservableList<String> divisionOptionsComboList = FXCollections.observableArrayList();
     public Label welcomeUserLabel;
     public Label timeZoneLabel;
 
+    /**
+     * Populate the UI as well as the combo box options
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -46,6 +47,7 @@ public class AddCustomerFormController implements Initializable {
         //Set username display
         welcomeUserLabel.setText("Current User: " + Users.currentUser.getUserName() + " | ");
 
+        //Iterate through the country options and add them to the countryOptionsComboList
         int i = 0;
         while(i < Countries.countryOptions.size()){
             try {
@@ -56,9 +58,10 @@ public class AddCustomerFormController implements Initializable {
                 }
             i++;
         }
-
+        //Assign the countryOptionsComboList to the countryComboBox
         countryComboBox.setItems(countryOptionsComboList);
 
+        //Refresh i, and iterate through the firstLevelDivisions options to populate the divisionOptionsComboList
         i = 0;
         while(i < FirstLevelDivisions.divisionOptions.size()){
             try {
@@ -69,20 +72,79 @@ public class AddCustomerFormController implements Initializable {
             }
             i++;
         }
-
+        //Assign the divisionOptionsComboList to the divisionComboBox
         divisionComboBox.setItems(divisionOptionsComboList);
-
-        /*switch (Users.currentUserLocale.getCountry()) {
-            case ("US"):
-                countryComboBox.
-                break;
-            default:
-                System.out.println("Combo box didn't load!" + " | " + Users.currentUserLocale.getCountry());
-        }*/
-
     }
 
+    /**
+     *
+     * @param actionEvent Verify essential information was filled out properly,
+     *                    then submit it to the SQL database as a new customer
+     * @throws SQLException
+     * @throws IOException
+     */
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
+        //Verify that a name was entered
+        try{
+            String name = nameTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Name entry error!");
+            alert.setContentText("Please enter a valid name.");
+            alert.show();
+            return;
+        }
+        //Verify that an address was entered
+        try{
+            String address = addressTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Address entry error!");
+            alert.setContentText("Please enter a valid address.");
+            alert.show();
+            return;
+        }
+        //Verify that a zip was entered
+        try{
+            String zip = zipTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Zip entry error!");
+            alert.setContentText("Please enter a valid zip.");
+            alert.show();
+            return;
+        }
+        //Verify that a phone was entered
+        try{
+            String phone = phoneTextField.getText();
+        }
+        catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Phone entry error!");
+            alert.setContentText("Please enter a valid phone.");
+            alert.show();
+            return;
+        }
+        //Verify that a division was selected
+        if(divisionComboBox.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Division selection error!");
+            alert.setContentText("Please enter a valid division.");
+            alert.show();
+            return;
+        }
+        //Verify that a division was selected
+        if(countryComboBox.getSelectionModel().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Country selection error!");
+            alert.setContentText("Please enter a valid country.");
+            alert.show();
+            return;
+        }
+        //After passing checks, run customersQuery.createCustomer, and either load the CustomersViewForm, or display an error if the customer wasn't created successfully.
         if (CustomersQuery.createCustomer(nameTextField.getText(), addressTextField.getText(), zipTextField.getText(),
                 phoneTextField.getText(), Users.currentUser.getUserName(),
                 divisionComboBox.getSelectionModel().getSelectedItem().toString(), Users.currentUserTimeZone.toString()) != 0){
@@ -105,6 +167,11 @@ public class AddCustomerFormController implements Initializable {
         }
     }
 
+    /**
+     *
+     * @param actionEvent Return to the CustomersViewForm
+     * @throws IOException
+     */
     public void onActionCancelButton(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/CustomersViewForm.fxml"));
@@ -118,6 +185,11 @@ public class AddCustomerFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
@@ -131,8 +203,14 @@ public class AddCustomerFormController implements Initializable {
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -145,11 +223,13 @@ public class AddCustomerFormController implements Initializable {
         stage.show();
     }
 
-    public void onActionDivisionComboBox(ActionEvent actionEvent) {
-
-    }
-
+    /**
+     *
+     * @param actionEvent on selection of a country, query the database for divisions associated with that country, and repopulate the divisionComboBox options
+     * @throws SQLException
+     */
     public void onActionCountryComboBox(ActionEvent actionEvent) throws SQLException {
+        //Clear the divisionOptionsComboList and iterate through the divisions associated with the country selected
         int i = 0;
         divisionOptionsComboList.clear();
         FirstLevelDivisions.divisionOptionsFiltered = FirstLevelDivisionsQuery.select(countryComboBox.getSelectionModel().getSelectedItem().toString());
@@ -164,8 +244,5 @@ public class AddCustomerFormController implements Initializable {
         }
 
         divisionComboBox.getSelectionModel().clearSelection();
-    }
-
-    public void onActionWelcomeUserLabel(MouseEvent mouseEvent) {
     }
 }
