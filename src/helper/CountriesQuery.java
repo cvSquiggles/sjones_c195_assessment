@@ -3,12 +3,16 @@ package helper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Countries;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CountriesQuery {
+    /**
+     *
+     * @return an ObservableList of all the countries that exist in the database
+     * @throws SQLException
+     */
     public static ObservableList<Countries> select() throws SQLException {
         String sql = "SELECT * FROM countries";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
