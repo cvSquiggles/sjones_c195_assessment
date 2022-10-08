@@ -1,18 +1,18 @@
 package helper;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Appointments;
 import model.Contacts;
-import model.Users;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ContactsQuery {
-
+    /**
+     *
+     * @return an ObservableList of the contacts that exist in the database
+     * @throws SQLException
+     */
     public static ObservableList<Contacts> selectContacts() throws SQLException {
         ObservableList<Contacts> contactList = FXCollections.observableArrayList();
 
