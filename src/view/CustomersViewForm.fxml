@@ -59,7 +59,7 @@
                 </AnchorPane>
                 <AnchorPane prefHeight="142.0" prefWidth="900.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <TableView fx:id="customersTable" onMouseClicked="#onMouseClickCustomerTable" prefHeight="481.0" prefWidth="900.0">
+                  <TableView fx:id="customersTable" prefHeight="481.0" prefWidth="900.0">
                     <columns>
                         <TableColumn fx:id="idColumn" prefWidth="51.0" text="ID" />
                       <TableColumn fx:id="nameColumn" prefWidth="165.0" text="Name" />

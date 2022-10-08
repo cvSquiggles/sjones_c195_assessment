@@ -145,7 +145,7 @@ public class AppointmentsViewFormController implements Initializable {
             if (type.getText() == "Yes") {
                 //Delete the appointment from the appointments table.
                 try {
-                    //Query database for the selected appointment's ID
+                    //Query database for the selected appointments' ID
                     int rowsReturned = AppointmentsQuery.delete(selectedAppointment.getID());
                     if (rowsReturned != 0) {
                         //Display delete confirmation

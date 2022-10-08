@@ -33,6 +33,11 @@ public class CustomersViewFormController implements Initializable{
     public Label timeZoneLabel;
     public Label currentUserLabel_customersView;
 
+    /**
+     * Populate UI as well as the customer list.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -58,9 +63,11 @@ public class CustomersViewFormController implements Initializable{
         }
     }
 
-    public void onActionWelcomeUserLabel(MouseEvent mouseEvent) {
-    }
-
+    /**
+     *
+     * @param actionEvent clear currentUser data, and set homePageLoaded to false again, then return to the login form.
+     * @throws IOException
+     */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
         Users.homePageLoaded = true;
@@ -76,6 +83,11 @@ public class CustomersViewFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent return to the HomePageForm
+     * @throws IOException
+     */
     public void onActionHomeButton(ActionEvent actionEvent) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/HomePageForm.fxml"));
@@ -89,6 +101,13 @@ public class CustomersViewFormController implements Initializable{
         stage.show();
     }
 
+    /**
+     *
+     * @param actionEvent Verify a customer is selected from the table, then prompt the user to confirm deletion.
+     * @throws SQLException
+     * @throws IOException
+     * Lambda is used here in the 'alert.showAndWait().ifPresent(type ->{' to pass in the clicked button
+     */
     public void onActionDeleteButton(ActionEvent actionEvent) throws SQLException, IOException {
         //Display an alert requesting delete confirmation.
         if(customersTable.getSelectionModel().isEmpty()) {
@@ -101,13 +120,14 @@ public class CustomersViewFormController implements Initializable{
 
         //Get the selected customer from the table
         Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
-
+        //Prompt the user for confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Customer selected for deletion.");
         alert.setContentText("Are you sure you want to delete this customer?");
         ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, cancelButton);
+        //Show alert and wait for user input.
         alert.showAndWait().ifPresent(type -> {
             if (type.getText() == "Yes") {
                 try {
@@ -125,12 +145,15 @@ public class CustomersViewFormController implements Initializable{
                 }
                 //Delete the customer from the customers table.
                 try {
+                    //Query the database for the selected customers' ID
                     int rowsReturned = CustomersQuery.deleteCustomer(selectedCustomer.getID());
                     if (rowsReturned != 0) {
+                        //Display delete confirmation
                         Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
                         alert3.setTitle("Delete confirmation");
                         alert3.setContentText("Customer " + selectedCustomer.getName() + " with ID " + selectedCustomer.getID() + " was deleted successfully.");
                         alert3.show();
+                        //Reload table post delete.
                         ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
                         customersTable.setItems(customerList);
                     } else {
@@ -149,8 +172,15 @@ public class CustomersViewFormController implements Initializable{
         });
     }
 
-
+    /**
+     *
+     * @param actionEvent Get selected customer from the table, and pass it into the EditCustomerFormController
+     *                    along with the customers' country division ID,then load the EditCustomerForm
+     * @throws IOException
+     * @throws SQLException
+     */
     public void onActionEditButton(ActionEvent actionEvent) throws IOException, SQLException {
+        //Confirm that a customer is selected.
         if (customersTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Customer Edit Error");
@@ -164,9 +194,10 @@ public class CustomersViewFormController implements Initializable{
             if (selectedCustomer == null) {
                 return;
             }
-
+            //Pass customer to the edit form, and query for the customers country division ID to populate the field on the edit form
             customerToEdit(selectedCustomer);
             EditCustomerFormController.customerCountryDiv(CustomersQuery.selectCountryDiv(selectedCustomer.getDivisionID()));
+            //Load edit form
             Parent root = FXMLLoader.load(getClass().getResource("/view/EditCustomerForm.fxml"));
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(root, 1200.0, 600.0);
@@ -177,6 +208,11 @@ public class CustomersViewFormController implements Initializable{
 
     }
 
+    /**
+     *
+     * @param actionEvent Load the AddCustomersViewForm
+     * @throws IOException
+     */
     public void onActionAddButton(ActionEvent actionEvent) throws IOException {
         //Load the Add Customer form.
         Parent root = FXMLLoader.load(getClass().getResource("/view/AddCustomerForm.fxml"));
@@ -188,27 +224,5 @@ public class CustomersViewFormController implements Initializable{
 
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void onMouseClickCustomerTable(MouseEvent mouseEvent) {
-        /*if(customersTable.getSelectionModel().isEmpty()) {
-            return;
-        }
-
-        //Get the selected customer from the table
-        Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
-
-        try {
-            ResultSet rs = AppointmentsQuery.selectByClient(selectedCustomer.getID());
-            if(rs.next()){
-                Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                alert2.setTitle("This client has appointments in the system.");
-                alert2.setContentText("All appointments associated with a client must be deleted before a client can be removed from the system.");
-                alert2.show();
-                return;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
     }
 }
