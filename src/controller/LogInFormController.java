@@ -60,10 +60,13 @@ public class LogInFormController implements Initializable {
             alert.setTitle("Language not supported!");
             alert.setContentText("Language defaulted to English");
             alert.show();
-        }
 
-        //Set language package
-        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat_" + Users.currentUserLocale.getLanguage());
+            //Set language package
+            Users.currentUserRB = ResourceBundle.getBundle("properties/Nat_" + "en");
+        }else{
+            //Set language package
+            Users.currentUserRB = ResourceBundle.getBundle("properties/Nat_" + Users.currentUserLocale.getLanguage());
+        }
 
         //Populate Countries
         try {
