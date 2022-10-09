@@ -67,7 +67,6 @@ public class HomePageFormController implements Initializable{
 
             try {
                 ResultSet rs = AppointmentsQuery.selectByUserWithTime(Users.currentUser.getId(), Users.currentUserTimeZone.toString(), startStampConverted);
-                System.out.println(startStampConverted);
                 if(rs.next()){
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle( rb.getString("Upcoming") + " " + rb.getString("appointment") + "!");

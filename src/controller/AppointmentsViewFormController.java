@@ -283,7 +283,6 @@ public class AppointmentsViewFormController implements Initializable {
         if (weekRadio.isSelected()) {
             try {
                 dateOffset = dateOffset - 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset, Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
@@ -292,7 +291,6 @@ public class AppointmentsViewFormController implements Initializable {
         } else {
             try {
                 dateOffset = dateOffset - 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset, Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
@@ -309,7 +307,6 @@ public class AppointmentsViewFormController implements Initializable {
         if (weekRadio.isSelected()) {
             try {
                 dateOffset = dateOffset + 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListWeek(dateOffset, Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {
@@ -318,7 +315,6 @@ public class AppointmentsViewFormController implements Initializable {
         } else {
             try {
                 dateOffset = dateOffset + 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectAppointmentsListMonth(dateOffset, Users.currentUserTimeZone.toString());
                 appointmentsTable.setItems(appointmentList);
             } catch (SQLException e) {

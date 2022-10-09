@@ -173,7 +173,6 @@ public class reportAppointmentContactsFormController implements Initializable {
         if (weekRadio.isSelected()) {
             try {
                 dateOffset = dateOffset - 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
                         Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
                         Users.currentUserTimeZone.toString());
@@ -184,7 +183,6 @@ public class reportAppointmentContactsFormController implements Initializable {
         } else {
             try {
                 dateOffset = dateOffset - 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
                         Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
                         Users.currentUserTimeZone.toString());
@@ -203,7 +201,6 @@ public class reportAppointmentContactsFormController implements Initializable {
         if (weekRadio.isSelected()) {
             try {
                 dateOffset = dateOffset + 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListWeek(dateOffset,
                         Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
                         Users.currentUserTimeZone.toString());
@@ -214,7 +211,6 @@ public class reportAppointmentContactsFormController implements Initializable {
         } else {
             try {
                 dateOffset = dateOffset + 1;
-                System.out.println(dateOffset);
                 ObservableList<Appointments> appointmentList = AppointmentsQuery.selectContactAppointmentsListMonth(dateOffset,
                         Contacts.contactOptions.get(contactComboBox.getSelectionModel().getSelectedIndex()).getID(),
                         Users.currentUserTimeZone.toString());

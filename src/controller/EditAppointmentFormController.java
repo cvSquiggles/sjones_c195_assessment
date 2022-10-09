@@ -151,7 +151,6 @@ public class EditAppointmentFormController implements Initializable {
         i = 0;
         while (i < customerComboBox.getItems().size()){
             if(customerComboBox.getItems().get(i).toString().contentEquals(appointmentToEdit.getCustomerName())){
-                System.out.println("List item value: "+ customerComboBox.getItems().get(i).toString() + " Customer name: " + appointmentToEdit.getCustomerName());
                 customerComboBox.setValue(customerComboBox.getItems().get(i));
                 i = customerComboBox.getItems().size();
             }else {
@@ -268,7 +267,7 @@ public class EditAppointmentFormController implements Initializable {
      */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -409,12 +408,10 @@ public class EditAppointmentFormController implements Initializable {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
                         startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + (Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) + 12) +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-                //System.out.println(startDateTime);
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
                         startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
-                //System.out.println(startDateTime);
             }
         } else{
             //Get start date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.

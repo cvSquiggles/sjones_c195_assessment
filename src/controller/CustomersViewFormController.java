@@ -32,6 +32,7 @@ public class CustomersViewFormController implements Initializable{
     public TableColumn divisionColumn;
     public Label timeZoneLabel;
     public Label currentUserLabel_customersView;
+    private ResourceBundle rb = Users.currentUserRB;
 
     /**
      * Populate UI as well as the customer list.
@@ -70,7 +71,7 @@ public class CustomersViewFormController implements Initializable{
      */
     public void onActionSignOutButton(ActionEvent actionEvent) throws IOException {
         Users.currentUser = null;
-        Users.homePageLoaded = true;
+        Users.homePageLoaded = false;
 
         Parent root = FXMLLoader.load(getClass().getResource("/view/LogInForm.fxml"));
 
@@ -112,8 +113,10 @@ public class CustomersViewFormController implements Initializable{
         //Display an alert requesting delete confirmation.
         if(customersTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Delete target null");
-            alert.setContentText("No target selected for deletion from the list");
+            alert.setTitle( rb.getString("Delete") + " " + rb.getString("target") + " " + rb.getString("null") + "!");
+            alert.setContentText( rb.getString("No") + " " + rb.getString("target") + " " + rb.getString("selected") + " " +
+                    rb.getString("for") + " " + rb.getString("deletion") + " " + rb.getString("from") + " " +
+                    rb.getString("the") + " " + rb.getString("list"));
             alert.show();
             return;
         }
@@ -122,21 +125,30 @@ public class CustomersViewFormController implements Initializable{
         Customers selectedCustomer = (Customers) customersTable.getSelectionModel().getSelectedItem();
         //Prompt the user for confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Customer selected for deletion.");
-        alert.setContentText("Are you sure you want to delete this customer?");
-        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.setTitle( rb.getString("Customer") + " " + rb.getString("selected") + " " + rb.getString("for") + " " + rb.getString("deletion") + ".");
+        alert.setContentText( rb.getString("Are") + " " + rb.getString("you") + " " + rb.getString("sure") + " " +
+                rb.getString("you") + " " + rb.getString("want") + " " + rb.getString("to") + " " +
+                rb.getString("delete") + " " + rb.getString("this") + " " + rb.getString("customer") + "?");
+        ButtonType yesButton = new ButtonType(rb.getString("Yes"), ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType(rb.getString("Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, cancelButton);
         //Show alert and wait for user input.
         alert.showAndWait().ifPresent(type -> {
-            if (type.getText() == "Yes") {
+            if (type.getText() == rb.getString("Yes")) {
                 try {
                     ResultSet rs = AppointmentsQuery.selectByCustomer(selectedCustomer.getID(), Users.currentUserTimeZone.toString());
 
                     if(rs.next()){
                         Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                        alert2.setTitle("This client has appointments in the system.");
-                        alert2.setContentText("All appointments associated with a client must be deleted before a client can be removed from the system.");
+                        alert2.setTitle( rb.getString("This") + " " + rb.getString("client") + " " + rb.getString("has") + " " +
+                                rb.getString("appointments") + " " + rb.getString("in") + " " + rb.getString("the") + " " +
+                                rb.getString("system") + ".");
+                        alert2.setContentText( rb.getString("All") + " " + rb.getString("appointments") + " " + rb.getString("associated") + " " +
+                                rb.getString("with") + " " + rb.getString("a") + " " + rb.getString("client") + " " +
+                                rb.getString("must") + " " + rb.getString("be") + " " + rb.getString("deleted") + " " +
+                                rb.getString("before") + " " + rb.getString("a") + " " + rb.getString("client") + " " +
+                                rb.getString("can") + " " + rb.getString("be") + " " + rb.getString("removed") + " " +
+                                rb.getString("from") + " " + rb.getString("the") + " " + rb.getString("system") + ".");
                         alert2.show();
                         return;
                     }
@@ -150,16 +162,21 @@ public class CustomersViewFormController implements Initializable{
                     if (rowsReturned != 0) {
                         //Display delete confirmation
                         Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
-                        alert3.setTitle("Delete confirmation");
-                        alert3.setContentText("Customer " + selectedCustomer.getName() + " with ID " + selectedCustomer.getID() + " was deleted successfully.");
+                        alert3.setTitle(rb.getString("Delete") + " " + rb.getString("confirmation"));
+                        alert3.setContentText(rb.getString("Customer") + " " + selectedCustomer.getName() +
+                                rb.getString("with") + " ID " + selectedCustomer.getID() + " " + rb.getString("was") + " " +
+                                rb.getString("deleted") + " " + rb.getString("successfully") + ".");
                         alert3.show();
                         //Reload table post delete.
                         ObservableList<Customers> customerList = CustomersQuery.selectCustomerList();
                         customersTable.setItems(customerList);
                     } else {
                         Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                        alert2.setTitle("Unable to delete customer with the provided information!");
-                        alert2.setContentText("Something must be wrong.");
+                        alert2.setTitle( rb.getString("Unable") + " " + rb.getString("to") + " " + rb.getString("delete") + " " +
+                                rb.getString("customer") + " " + rb.getString("with") + " " + rb.getString("the") + " " +
+                                rb.getString("provided") + " " + rb.getString("information") + " " + "!");
+                        alert2.setContentText( rb.getString("Something") + " " + rb.getString("must") + " " +
+                                rb.getString("be") + " " + rb.getString("wrong") + " " + ".");
                         alert2.show();
                     }
                 } catch (SQLException e) {
@@ -183,8 +200,9 @@ public class CustomersViewFormController implements Initializable{
         //Confirm that a customer is selected.
         if (customersTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Customer Edit Error");
-            alert.setContentText("No customer was selected from the list.");
+            alert.setTitle(rb.getString("Customer") + " " + rb.getString("Edit") + " " + rb.getString("Error"));
+            alert.setContentText(rb.getString("No") + " " + rb.getString("customer") + " " + rb.getString("was") + " " +
+                    rb.getString("selected") + " " + rb.getString("from") + " " + rb.getString("the") + " " + rb.getString("list") + " " + ".");
             alert.show();
             return;
         }

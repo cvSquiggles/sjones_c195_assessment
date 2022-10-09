@@ -32,6 +32,7 @@ public class AddCustomerFormController implements Initializable {
     public ObservableList<String> divisionOptionsComboList = FXCollections.observableArrayList();
     public Label welcomeUserLabel;
     public Label timeZoneLabel;
+    private ResourceBundle rb = Users.currentUserRB;
 
     /**
      * Populate the UI as well as the combo box options
@@ -85,62 +86,62 @@ public class AddCustomerFormController implements Initializable {
      */
     public void onActionCreateButton(ActionEvent actionEvent) throws SQLException, IOException {
         //Verify that a name was entered
-        try{
-            String name = nameTextField.getText();
-        }
-        catch (Exception e){
+       if(nameTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Name entry error!");
-            alert.setContentText("Please enter a valid name.");
+            alert.setTitle( rb.getString("Name") + " " + rb.getString("entry") + " " +
+                    rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " + rb.getString("a") + " " +
+                    rb.getString("valid") + " " + rb.getString("name") + ".");
             alert.show();
             return;
         }
         //Verify that an address was entered
-        try{
-            String address = addressTextField.getText();
-        }
-        catch (Exception e){
+        if(addressTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Address entry error!");
-            alert.setContentText("Please enter a valid address.");
+            alert.setTitle( rb.getString("Address") + " " + rb.getString("entry") + " " + rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " +
+                    rb.getString("address") + ".");
             alert.show();
             return;
         }
         //Verify that a zip was entered
-        try{
-            String zip = zipTextField.getText();
-        }
-        catch (Exception e){
+        if(zipTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Zip entry error!");
-            alert.setContentText("Please enter a valid zip.");
+            alert.setTitle("Zip " +  rb.getString("entry") + " " +  rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                            rb.getString("a") + " " + rb.getString("valid") + " zip.");
             alert.show();
             return;
         }
-        //Verify that a phone was entered
-        try{
-            String phone = phoneTextField.getText();
-        }
-        catch (Exception e){
+        if(phoneTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Phone entry error!");
-            alert.setContentText("Please enter a valid phone.");
+            alert.setTitle( rb.getString("Phone") + " " + rb.getString("entry") + " " +
+                    rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " +
+                    rb.getString("phone") + ".");
             alert.show();
             return;
         }
         //Verify that a division was selected
         if(divisionComboBox.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Division selection error!");
-            alert.setContentText("Please enter a valid division.");
+            alert.setTitle( rb.getString("Division") + " " + rb.getString("selection") + " " +
+                    rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " + rb.getString("division") + ".");
             alert.show();
             return;
         }
         //Verify that a division was selected
         if(countryComboBox.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Country selection error!");
-            alert.setContentText("Please enter a valid country.");
+            alert.setTitle( rb.getString("Country") + " " + rb.getString("selection") + " " +
+                    rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " +
+                    rb.getString("country") + ".");
             alert.show();
             return;
         }
@@ -161,8 +162,12 @@ public class AddCustomerFormController implements Initializable {
         }
         else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to add customer with the provided information!");
-            alert.setContentText("Something must be wrong.");
+            alert.setTitle( rb.getString("Unable") + " " + rb.getString("to") + " " +
+                    rb.getString("add") + " " + rb.getString("customer") + " " + rb.getString("with") + " " +
+                    rb.getString("the") + " " + rb.getString("provided") + " " +
+                    rb.getString("information") + "!");
+            alert.setContentText( rb.getString("Something") + " " + rb.getString("must") + " " +
+                    rb.getString("be") + " " + rb.getString("wrong") + ".");
             alert.show();
         }
     }

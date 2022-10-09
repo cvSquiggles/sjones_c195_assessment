@@ -103,7 +103,6 @@ public class LogInFormController implements Initializable {
                 alert.setContentText(Users.currentUserRB.getString("Invalid") + " " + Users.currentUserRB.getString("credentials") + ".");
                 alert.show();
                 path = Paths.get("login_activity.txt");
-                System.out.println(Files.exists(path));
                 //Check if login_activity.txt exists, and populate form accordingly.
                 if(!Files.exists(path)){
                     try {
@@ -131,7 +130,6 @@ public class LogInFormController implements Initializable {
             case 1:
                 //Check if login_activity.txt exists, and populate form accordingly.
                 path = Paths.get("login_activity.txt");
-                System.out.println(Files.exists(path));
                 if(!Files.exists(path)){
                     try {
                         Files.createFile(path);
