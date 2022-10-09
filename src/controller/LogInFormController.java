@@ -9,19 +9,23 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Countries;
 import model.FirstLevelDivisions;
 import model.Users;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
-import java.time.*;
-import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -50,8 +54,16 @@ public class LogInFormController implements Initializable {
         Users.currentUserTimeZone = zonedDateTime.getOffset();
         timeZoneLabel.setText(Users.currentUserZoneID.toString());
 
+        //Check user language, default to english if not supported
+        if(!(Users.currentUserLocale.getLanguage().equals("fr") || Users.currentUserLocale.getLanguage().equals("en"))){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Language not supported!");
+            alert.setContentText("Language defaulted to English");
+            alert.show();
+        }
+
         //Set language package
-        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat", Users.currentUserLocale);
+        Users.currentUserRB = ResourceBundle.getBundle("properties/Nat_" + Users.currentUserLocale.getLanguage());
 
         //Populate Countries
         try {
@@ -74,7 +86,7 @@ public class LogInFormController implements Initializable {
      * @throws IOException
      * @throws SQLException
      * Passes the username and password into the UsersQuery signIn function to determine credential validity.
-     * Writes results of login attempt to 'login_activity.txt' file in the root directory.
+     * Write results of login attempt to 'login_activity.txt' file in the root directory.
      */
     public void onActionLogInButton(ActionEvent actionEvent) throws IOException, SQLException {
 
@@ -87,8 +99,8 @@ public class LogInFormController implements Initializable {
         switch (credentialCheck) {
             case 0:
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Log in failed.");
-                alert.setContentText("Invalid credentials entered.");
+                alert.setTitle(Users.currentUserRB.getString("Login")  + " " + Users.currentUserRB.getString("failed"));
+                alert.setContentText(Users.currentUserRB.getString("Invalid") + " " + Users.currentUserRB.getString("credentials") + ".");
                 alert.show();
                 path = Paths.get("login_activity.txt");
                 System.out.println(Files.exists(path));
@@ -150,8 +162,10 @@ public class LogInFormController implements Initializable {
                 break;
             default:
                 Alert alertDefault = new Alert(Alert.AlertType.ERROR);
-                alertDefault.setTitle("Log in failed.");
-                alertDefault.setContentText("An unknown error has occurred..");
+                alertDefault.setTitle(Users.currentUserRB.getString("Login")  + " " + Users.currentUserRB.getString("failed"));
+                alertDefault.setContentText(Users.currentUserRB.getString("An") + " " +
+                        Users.currentUserRB.getString("unknown") + " " + Users.currentUserRB.getString("error")
+                        + " " + Users.currentUserRB.getString("has") + " " + Users.currentUserRB.getString("occurred") + "...");
                 alertDefault.show();
                 usernameTextField.setText("");
                 passwordTextField.setText("");
