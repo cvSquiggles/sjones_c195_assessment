@@ -128,4 +128,6 @@ public class Appointments {
      */
     public int getUserID() {return userID;}
 
+    public int getCustomerID() {return customerID;}
+
 }

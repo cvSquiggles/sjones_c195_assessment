@@ -48,6 +48,7 @@ public class EditAppointmentFormController implements Initializable {
     public Button createButton;
     private static Appointments appointmentToEdit = null; //Appointments Object to allow passing in an Appointments object from another form
     public ComboBox userComboBox;
+    private ResourceBundle rb = Users.currentUserRB;
 
     public static void appointmentToEdit(Appointments passAppointment) {appointmentToEdit = passAppointment;} //Functionality to pass in Appointments
     private ObservableList<Customers> customerList = FXCollections.observableArrayList();
@@ -329,52 +330,65 @@ public class EditAppointmentFormController implements Initializable {
         }
         catch (IndexOutOfBoundsException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Customer/Contact Selection Error");
-            alert.setContentText("You must select a valid customer, and contact.");
+            alert.setTitle(rb.getString("Customer") + "/" + rb.getString("Contact") + "/" + rb.getString("User") +
+                    rb.getString("Selection") + " " + rb.getString("Error"));
+            alert.setContentText( rb.getString("You") + " " + rb.getString("must") + " " + rb.getString("select") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " + rb.getString("customer") + ", " +
+                    rb.getString("user") + ", " + rb.getString("and") + " " + rb.getString("contact") + ".");
             alert.show();
             return;
         }
         //Verify that a title was entered
-        try{
-            String title = titleTextField.getText();
-        }
-        catch (Exception e){
+        if(titleTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Title entry error!");
-            alert.setContentText("Please enter a valid title.");
+            alert.setTitle( rb.getString("Title") + " " + rb.getString("entry") + " " + rb.getString("error") + " " + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " + rb.getString("title") + ".");
             alert.show();
             return;
         }
         //Verify that a description was entered
-        try{
-            String desc = descriptionTextField.getText();
-        }
-        catch (Exception e){
+        if(descriptionTextField.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Description entry error!");
-            alert.setContentText("Please enter a valid description.");
+            alert.setTitle( rb.getString("Description") + " " + rb.getString("entry") + " " + rb.getString("error") + " " + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " + rb.getString("a") + " " +
+                    rb.getString("valid") + " " + rb.getString("description") + ".");
             alert.show();
             return;
         }
         //Verify that a location was entered
-        try{
-            String loc = locationTextField.getText();
-        }
-        catch (Exception e){
+        if(locationTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Location entry error!");
-            alert.setContentText("Please enter a valid location.");
+            alert.setTitle( rb.getString("Location") + " " + rb.getString("entry") + " " + rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " +
+                    rb.getString("a") + " " + rb.getString("valid") + " " + rb.getString("location") + ".");
             alert.show();
             return;
         }
         //Verify that a type was entered
-        try{
-            String type = typeTextField.getText();
-        }
-        catch (Exception e){
+        if(typeTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Type entry error!");
-            alert.setContentText("Please enter a valid type.");
+            alert.setTitle( rb.getString("Type") + " " + rb.getString("entry") + " " + rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " + rb.getString("a") + " " +
+                    rb.getString("valid") + " " + rb.getString("type") + ".");
+            alert.show();
+            return;
+        }
+
+        if(startDatePicker.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle( rb.getString("Date") + " " + rb.getString("entry") + " " + rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " + rb.getString("a") + " " +
+                    rb.getString("valid") + " " + rb.getString("date") + ".");
+            alert.show();
+            return;
+        }
+
+        if(endDatePicker.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle( rb.getString("Date") + " " + rb.getString("entry") + " " + rb.getString("error") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("enter") + " " + rb.getString("a") + " " +
+                    rb.getString("valid") + " " + rb.getString("date") + ".");
             alert.show();
             return;
         }
@@ -475,8 +489,11 @@ public class EditAppointmentFormController implements Initializable {
         //If start is after end, fail and alert user
         if (diffSeconds < 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Meeting time logic error");
-            alert.setContentText("Please schedule meeting to end AFTER it starts.");
+            alert.setTitle( rb.getString("Meeting") + " " + rb.getString("time") + " " +
+                    rb.getString("logic") + " " + rb.getString("error"));
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("schedule") + " " + rb.getString("meeting") + " " +
+                    rb.getString("to") + " " + rb.getString("end") + " " + rb.getString("after") + " " +
+                    rb.getString("it") + rb.getString("Starts") + ".");
             alert.show();
             return;
         }
@@ -484,8 +501,13 @@ public class EditAppointmentFormController implements Initializable {
         //If Meeting is longer than business hours allow, fail and alert user
         if (diffInHours >= 14){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Meeting is longer than business hours allow.");
-            alert.setContentText("Please reduce meeting length to remain within a 14 hour business day.");
+            alert.setTitle( rb.getString("Meeting") + " " + rb.getString("is") + " " + rb.getString("longer") + " " +
+                    rb.getString("than") + " " + rb.getString("business") + " " + rb.getString("hours") + " " +
+                    rb.getString("allow") + ".");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("reduce") + " " + rb.getString("meeting") + " " +
+                    rb.getString("length") + " " + rb.getString("to") + " " + rb.getString("remain") + " " +
+                    rb.getString("within") + " " + rb.getString("a") + " " + "14" + " " + rb.getString("hour") + " " +
+                    rb.getString("business") + " " + rb.getString("day") + ".");
             alert.show();
             return;
         }
@@ -493,8 +515,12 @@ public class EditAppointmentFormController implements Initializable {
         //If meeting starts before 8am EST, or after 10pm EST, fail and alert user
         if (startConvertedValue < 8 || startConvertedValue >= 22){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Meeting starts outside of business hours!");
-            alert.setContentText("Please schedule meeting to start after 8am EST, and before 10pm EST.");
+            alert.setTitle( rb.getString("Meeting") + " " + rb.getString("starts") + " " +
+                    rb.getString("outside") + " " + rb.getString("of") + " " + rb.getString("business") + " " +
+                    rb.getString("hours") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("schedule") + " " + rb.getString("meeting") + " " +
+                    rb.getString("to") + " " + rb.getString("start") + " " + rb.getString("after") + " " +
+                    "8am EST" + ", " + rb.getString("and") + " " + rb.getString("before") + " 10pm EST.");
             alert.show();
             return;
         }
@@ -502,8 +528,11 @@ public class EditAppointmentFormController implements Initializable {
         //If meeting ends after 10pm EST, fail and alert user
         if (endConvertedValue < 8 || (endConvertedValue >= 22 && endConvertedValueMin > 0)){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Meeting ends outside of business hours!");
-            alert.setContentText("Please schedule meeting to end before 10pm EST.");
+            alert.setTitle( rb.getString("Meeting") + " " + rb.getString("ends") + " " +
+                    rb.getString("outside") + " " + rb.getString("of") + " " + rb.getString("business") + " " +
+                    rb.getString("hours") + "!");
+            alert.setContentText( rb.getString("Please") + " " + rb.getString("schedule") + " " + rb.getString("meeting") + " " +
+                    rb.getString("to") + " " + rb.getString("end") + " " + rb.getString("before") + " 10pm EST.");
             alert.show();
             return;
         }
@@ -566,8 +595,10 @@ public class EditAppointmentFormController implements Initializable {
         }
         else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unable to update appointment with the provided information!");
-            alert.setContentText("Something must be wrong.");
+            alert.setTitle( rb.getString("Unable") + " " + rb.getString("to") + " " + rb.getString("update") + " " +
+                    rb.getString("appointment") + " " + rb.getString("with") + " " + rb.getString("provided") + " " +
+                    rb.getString("information") + "!");
+            alert.setContentText( rb.getString("Something") + " " + rb.getString("must") + " " + rb.getString("be") + " " + rb.getString("wrong") + ".");
             alert.show();
         }
     }

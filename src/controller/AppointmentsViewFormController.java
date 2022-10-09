@@ -36,6 +36,7 @@ public class AppointmentsViewFormController implements Initializable {
     public RadioButton weekRadio;
     public ToggleGroup weekMonthToggle;
     public RadioButton monthRadio;
+    private ResourceBundle rb = Users.currentUserRB;
 
     /**
      * Populate the appointments table, and set UI label values.
@@ -124,8 +125,12 @@ public class AppointmentsViewFormController implements Initializable {
         //Display an alert requesting delete confirmation.
         if(appointmentsTable.getSelectionModel().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Delete target null");
-            alert.setContentText("No target selected for deletion from the list");
+            alert.setTitle(rb.getString("Delete") + " " +
+                    rb.getString("target") + " " + rb.getString("null"));
+            alert.setContentText(rb.getString("No") + " " + rb.getString("target") + " "
+                    + rb.getString("selected") + " " +  rb.getString("for") + " " +
+                            rb.getString("deletion") + rb.getString("from") + " " +
+                            rb.getString("the") + " " + rb.getString("list"));
             alert.show();
             return;
         }
@@ -135,14 +140,19 @@ public class AppointmentsViewFormController implements Initializable {
 
         //Prompt the user for confirmation
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Appointment selected for deletion.");
-        alert.setContentText("Are you sure you want to delete this appointment?");
-        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.setTitle(rb.getString("Appointment") + " " + rb.getString("selected") + " " +
+                rb.getString("selected") + " " + rb.getString("for") + " " + rb.getString("deletion") + ".");
+        alert.setContentText(rb.getString("Are") + " " + rb.getString("you") + " " +
+                rb.getString("sure") + " " + rb.getString("you") + " " +
+                rb.getString("want") + " " + rb.getString("to") + " " +
+                rb.getString("delete") + " " + rb.getString("this") + " " +
+                rb.getString("appointment") + "?");
+        ButtonType yesButton = new ButtonType(rb.getString("Yes"), ButtonBar.ButtonData.YES);
+        ButtonType cancelButton = new ButtonType(rb.getString("Cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, cancelButton);
         //Show alert and wait for user input.
         alert.showAndWait().ifPresent(type -> {
-            if (type.getText() == "Yes") {
+            if (type.getText() == rb.getString("Yes")) {
                 //Delete the appointment from the appointments table.
                 try {
                     //Query database for the selected appointments' ID
@@ -150,8 +160,10 @@ public class AppointmentsViewFormController implements Initializable {
                     if (rowsReturned != 0) {
                         //Display delete confirmation
                         Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
-                        alert3.setTitle("Delete confirmation");
-                        alert3.setContentText("Appointment ID " + selectedAppointment.getID() + " of type " + selectedAppointment.getType() + " was deleted successfully.");
+                        alert3.setTitle(rb.getString("Delete") + " " + rb.getString("confirmation"));
+                        alert3.setContentText("Appointment ID " + selectedAppointment.getID() + " " + rb.getString("of") + " " +
+                                rb.getString("type") + " " + selectedAppointment.getType() + rb.getString("was") + " " +
+                                        rb.getString("deleted") + " " + rb.getString("successfully") + ".");
                         alert3.show();
                         //Reload table post delete.
                         if(weekRadio.isSelected()) {
@@ -164,8 +176,11 @@ public class AppointmentsViewFormController implements Initializable {
                         }
                     } else {
                         Alert alert2 = new Alert(Alert.AlertType.ERROR);
-                        alert2.setTitle("Unable to delete appointment with the provided information!");
-                        alert2.setContentText("Something must be wrong.");
+                        alert2.setTitle( rb.getString("Unable") + " " + rb.getString("to") + " " + rb.getString("delete") + " " +
+                                rb.getString("appointment") + " " + rb.getString("with") + " " + rb.getString("the") + " " +
+                                rb.getString("provided") + " " + rb.getString("information") + " " + "!");
+                        alert2.setContentText( rb.getString("Something") + " " + rb.getString("must") + " " +
+                                rb.getString("be") + " " + rb.getString("wrong") + " " + ".");
                         alert2.show();
                     }
                 } catch (SQLException e) {
@@ -188,8 +203,9 @@ public class AppointmentsViewFormController implements Initializable {
         //Confirm that an appointment is selected.
         if (appointmentsTable.getSelectionModel().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Appointment Edit Error");
-            alert.setContentText("No appointment was selected from the list.");
+            alert.setTitle( rb.getString("Appointment") + " " + rb.getString("Edit") + " " + rb.getString("Error"));
+            alert.setContentText( rb.getString("No") + " " + rb.getString("appointment") + " " + rb.getString("was") + " " +
+                    rb.getString("selected") + " " + rb.getString("from") + " " + rb.getString("the") + " " + rb.getString("list") + " " + ".");
             alert.show();
             return;
         }

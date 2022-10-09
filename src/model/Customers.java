@@ -70,4 +70,6 @@ public class Customers {
      * @return the customers' division ID
      */
     public int getDivisionID() {return divisionID;}
+    public String getDivision() {return division;}
+
 }

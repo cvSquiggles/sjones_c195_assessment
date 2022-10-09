@@ -33,6 +33,7 @@ public class HomePageFormController implements Initializable{
     public Button aapmntTotalsButton;
     public Button appmntContactButton;
     public Button testingAppmntButton;
+    private ResourceBundle rb = Users.currentUserRB;
 
 
     /**
@@ -59,27 +60,30 @@ public class HomePageFormController implements Initializable{
             LocalDateTime startStamp = LocalDateTime.now(Users.currentUserZoneID);
 
             String startDate = startStamp.toString().substring(0, 10);
-            System.out.println(startDate);
             String startTime = startStamp.toString().substring(11, 19);
-            System.out.println(startTime);
 
             String startStampConverted = startDate + " " + startTime;
             LocalDateTime start = LocalDateTime.parse(startStampConverted, formatter);
-            System.out.println(start);
 
             try {
                 ResultSet rs = AppointmentsQuery.selectByUserWithTime(Users.currentUser.getId(), Users.currentUserTimeZone.toString(), startStampConverted);
+                System.out.println(startStampConverted);
                 if(rs.next()){
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Upcoming appointment!");
-                    alert.setContentText("ID: " + rs.getInt("Appointment_ID") +  " | Date/Time: " + rs.getString("Start"));
+                    alert.setTitle( rb.getString("Upcoming") + " " + rb.getString("appointment") + "!");
+                    alert.setContentText("ID: " + rs.getInt("Appointment_ID") +  " | " + rb.getString("Date") + "/" +
+                            rb.getString("Time") + ": " + rs.getString("Start"));
                     alert.show();
                     Users.homePageLoaded = true;
                 }
                 else{
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("No upcoming appointments!");
-                    alert.setContentText("There are no appointments scheduled for you within the next 15 minutes!");
+                    alert.setTitle( rb.getString("No") + " " + rb.getString("upcoming") + " " +
+                            rb.getString("appointments") + "!");
+                    alert.setContentText( rb.getString("There") + " " + rb.getString("are") + " " + rb.getString("no") + " " +
+                            rb.getString("appointments") + " " + rb.getString("scheduled") + " " + rb.getString("for") + " " +
+                            rb.getString("you") + " " + rb.getString("within") + " " + rb.getString("the") + " " +
+                            rb.getString("next") + " 15 " +  rb.getString("minutes") + "!");
                     alert.show();
                     Users.homePageLoaded = true;
                 }
