@@ -21,6 +21,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the ReportAppointmentContactsForm.fxml
+ * Queries the database for appointments filtered by the customer specified in the drop-down on the form.
+ */
 public class reportAppointmentContactsFormController implements Initializable {
     public Label timeZoneLabel;
     public Label currentUserLabel_customersView;

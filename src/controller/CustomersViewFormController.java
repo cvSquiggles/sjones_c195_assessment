@@ -11,7 +11,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.*;
 import java.io.IOException;
@@ -20,8 +19,11 @@ import java.sql.SQLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import static controller.EditCustomerFormController.customerToEdit;
-
-
+/**
+ * Controls the CustomersViewForm.fxml
+ * Pulls the existing customer information from the database
+ * Also contains navigation to add, edit, or delete customers
+ */
 public class CustomersViewFormController implements Initializable{
     public TableView customersTable;
     public TableColumn idColumn;

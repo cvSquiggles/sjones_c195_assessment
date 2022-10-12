@@ -25,6 +25,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the EditAppointmentViewForm.fxml
+ * Populates the form with information passed in from the previous form on initialization
+ * On submission, pulls data from the form and runs it through logic checks before attempting to submit it to the database via AppointmentsQuery.update()
+ */
 public class EditAppointmentFormController implements Initializable {
     public Label welcomeUserLabel;
     public Label timeZoneLabel;

@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
+/**
+ * Controls the ReportAppointmentTestingForm.fxml
+ * Queries the database for appointments filtered for Type containing the string of characters 'test', or, 'Test' and displays them
+ */
 public class ReportAppointmentTestingFormController implements Initializable {
     public TableView appointmentsTable;
     public TableColumn idColumn;

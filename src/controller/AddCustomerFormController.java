@@ -20,6 +20,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the AddCustomerForm.fxml
+ * Pulls data from the form and runs it through logic checks before attempting to submit it to the database via CustomersQuery.createCustomer()
+ */
 public class AddCustomerFormController implements Initializable {
 
     public TextField nameTextField;

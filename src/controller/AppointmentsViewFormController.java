@@ -12,12 +12,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.*;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+/**
+ * Controls the AppointmentsViewForm.fxml
+ * Pulls the existing appointment information from the database, and allows the user to cycle through the appointments filtered by week, or month
+ * Also contains navigation to add, edit, or delete appointments
+ */
 public class AppointmentsViewFormController implements Initializable {
     public Label timeZoneLabel;
     public Label currentUserLabel_customersView;

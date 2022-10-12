@@ -30,6 +30,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
+/**
+ * Controls the LogInForm.fxml
+ * On initialization, grabs information about the users' location/time zone, as well as the proper resource bundle to use for them.
+ * Pulls form data and submits to database as a login attempt via UsersQuery.signIn(), and logs this attempt to the login_activity.txt file in the root directory
+ */
 public class LogInFormController implements Initializable {
 
     public Label timeZoneLabel;

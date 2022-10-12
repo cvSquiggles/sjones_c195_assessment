@@ -21,6 +21,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the ReportAppointmentTotalsForm.fxml
+ * Queries the database for the count of appointments grouped by type and then month and displays them
+ */
 public class reportAppointmentTotalsFormController implements Initializable {
     public Label currentUserLabel_customersView;
     public Label timeZoneLabel;

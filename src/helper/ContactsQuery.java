@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains various methods of querying the database for contact information
+ */
 public class ContactsQuery {
     /**
      *

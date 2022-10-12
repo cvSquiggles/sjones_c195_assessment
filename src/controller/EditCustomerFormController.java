@@ -18,6 +18,11 @@ import java.sql.SQLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the EditCustomerForm.fxml
+ * Populates the form with information passed in from the previous form on initialization
+ * On submission, pulls data from the form and runs it through logic checks before attempting to submit it to the database via Customer.updateCustomer()
+ */
 public class EditCustomerFormController implements Initializable {
     private static Customers customerToEdit = null;
     private static int[] countryDiv = null;

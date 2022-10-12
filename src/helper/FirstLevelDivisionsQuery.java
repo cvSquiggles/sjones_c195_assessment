@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains methods of querying the database for first-level divisions information
+ */
 public class FirstLevelDivisionsQuery {
     /**
      *

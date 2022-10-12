@@ -22,6 +22,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the HomePageForm.fxml
+ * Runs a check on initialization for upcoming meetings for the user
+ * Contains navigation for bonus reports, appointments, and customers.
+ */
 public class HomePageFormController implements Initializable{
 
     public Button quitButton;

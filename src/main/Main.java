@@ -10,7 +10,6 @@ import model.Users;
 
 /**
  * Javadoc files located in sjones_c195_assessment\javadoc
- *
  */
 public class Main extends Application {
     /**

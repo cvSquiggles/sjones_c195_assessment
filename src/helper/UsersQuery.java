@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains methods of querying the database for user information, including the application sign in credential check functionality
+ */
 public class UsersQuery {
     /**
      *

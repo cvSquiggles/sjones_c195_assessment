@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contains various methods of querying the database for appointment information
+ */
 public class AppointmentsQuery {
     /**
      * Queries the database for all appointments within the provided weekOffSet, and converts them to the local users time zone

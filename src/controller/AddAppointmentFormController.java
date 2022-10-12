@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+/**
+ * Controls the AddAppointmentViewForm.fxml
+ * Pulls data from the form and runs it through logic checks before attempting to submit it to the database via AppointmentsQuery.insert()
+ */
 public class AddAppointmentFormController implements Initializable {
 
     public Label welcomeUserLabel;
