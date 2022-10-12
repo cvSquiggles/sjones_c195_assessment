@@ -445,7 +445,7 @@ public class AddAppointmentFormController implements Initializable {
         LocalDateTime end = LocalDateTime.parse(endDateTime, formatter);
         //Query for the selected customer's meetings already in the database, then compare them against the new meetings date/times.
         try {
-            ResultSet rs2 = AppointmentsQuery.selectByCustomer(2, Users.currentUserTimeZone.toString());
+            ResultSet rs2 = AppointmentsQuery.selectByCustomer(customerID, Users.currentUserTimeZone.toString());
             while(rs2.next()){
                 Appointments appToAdd = new Appointments(rs2.getInt("Appointment_ID"), rs2.getString("Title"), rs2.getString("Description"),
                         rs2.getString("Location"), rs2.getString("Contact_Name"), rs2.getString("Type"), rs2.getString ("Created_By"),
@@ -466,7 +466,7 @@ public class AddAppointmentFormController implements Initializable {
                 alert.setContentText( rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
                         rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
                         rb.getString("this") + " " + rb.getString("clients'") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + appsToCheck.get(i).getTitle() + "!");
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
                 alert.show();
                 return;
             }
@@ -476,7 +476,48 @@ public class AddAppointmentFormController implements Initializable {
                 alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
                         rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
                         rb.getString("this") + " " + rb.getString("clients'") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + appsToCheck.get(i).getTitle() + "!");
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            i++;
+        }
+        //Code to check if a start or end time overlaps with a contacts other meetings.
+                ObservableList<Appointments> appsToCheck2 = FXCollections.observableArrayList();
+        //Query for the selected customer's meetings already in the database, then compare them against the new meetings date/times.
+        try {
+            ResultSet rs2 = AppointmentsQuery.selectByContact(contactID, Users.currentUserTimeZone.toString());
+            while(rs2.next()){
+                Appointments appToAdd = new Appointments(rs2.getInt("Appointment_ID"), rs2.getString("Title"), rs2.getString("Description"),
+                        rs2.getString("Location"), rs2.getString("Contact_Name"), rs2.getString("Type"), rs2.getString ("Created_By"),
+                        rs2.getString("Start"), rs2.getString("End"), rs2.getInt("Customer_ID"), rs2.getInt("User_ID"),
+                        rs2.getInt("Contact_ID"), rs2.getString("Customer_Name"));
+
+                appsToCheck.add(appToAdd);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        i = 0;
+        while (i < appsToCheck.size()){
+            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle( rb.getString("Meeting") + " " + rb.getString("conflict"));
+                alert.setContentText( rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
+                        rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
+                        rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
                 alert.show();
                 return;
             }

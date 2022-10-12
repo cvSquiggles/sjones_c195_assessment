@@ -296,6 +296,22 @@ public class AppointmentsQuery {
         return ps.executeQuery();
     }
 
+    public static ResultSet selectByContact(int contact_id, String timeZone) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID  WHERE a.Contact_ID = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, contact_id);
+
+        return ps.executeQuery();
+    }
+
     /**
      * Queries the database for all appointments, and sorts them by Month, and then by Type, so you can see how many of each type of appointment are scheduled each month
      * @return a ResultSet containing all of the appointments grouped by month, and then type

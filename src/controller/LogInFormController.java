@@ -36,6 +36,10 @@ public class LogInFormController implements Initializable {
     public TextField usernameTextField;
     public TextField passwordTextField;
     public Button logInButton;
+    public Label headerLabel;
+    public Label usernameLabel;
+    public Label passwordLabel;
+    public Label locHeader;
 
     /**
      *
@@ -67,6 +71,14 @@ public class LogInFormController implements Initializable {
             //Set language package
             Users.currentUserRB = ResourceBundle.getBundle("properties/Nat_" + Users.currentUserLocale.getLanguage());
         }
+        //Update UI
+        headerLabel.setText(Users.currentUserRB.getString("Welcome") + " " + Users.currentUserRB.getString("to") + " C195 " +
+                Users.currentUserRB.getString("Schedule") + " " + Users.currentUserRB.getString("Assistant") + "!");
+        usernameLabel.setText(Users.currentUserRB.getString("Username") + ":");
+        passwordLabel.setText(Users.currentUserRB.getString("Password") + ":");
+        usernameTextField.setPromptText(Users.currentUserRB.getString("Enter") + " " + Users.currentUserRB.getString("username") + "...");
+        passwordTextField.setPromptText(Users.currentUserRB.getString("Enter") + " " + Users.currentUserRB.getString("password") + "...");
+        locHeader.setText(Users.currentUserRB.getString("Location"));
 
         //Populate Countries
         try {
