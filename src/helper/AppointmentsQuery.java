@@ -299,6 +299,36 @@ public class AppointmentsQuery {
         return ps.executeQuery();
     }
 
+    /**
+     * Queries the database for appointments for the passed in User
+     * @param user_id the ID of the user that is being searched for
+     * @param timeZone the current users' time zone offset
+     * @return a ResultSet with all the specified users' appointments in the database
+     * @throws SQLException
+     */
+    public static ResultSet selectByUser(int user_id, String timeZone) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID  WHERE a.User_ID = ?";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+        ps.setInt(3, user_id);
+
+        return ps.executeQuery();
+    }
+
+    /**
+     *
+     * @param contact_id the ID of the contact that is being searched for
+     * @param timeZone the current users' time zone offset
+     * @return a ResultSet with all the specified contacts' appointments in the database
+     * @throws SQLException
+     */
     public static ResultSet selectByContact(int contact_id, String timeZone) throws SQLException {
         String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
                 "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
