@@ -165,7 +165,7 @@ public class AppointmentsViewFormController implements Initializable {
                         Alert alert3 = new Alert(Alert.AlertType.INFORMATION);
                         alert3.setTitle(rb.getString("Delete") + " " + rb.getString("confirmation"));
                         alert3.setContentText("Appointment ID " + selectedAppointment.getID() + " " + rb.getString("of") + " " +
-                                rb.getString("type") + " " + selectedAppointment.getType() + rb.getString("was") + " " +
+                                rb.getString("type") + " " + selectedAppointment.getType() + " " + rb.getString("was") + " " +
                                         rb.getString("deleted") + " " + rb.getString("successfully") + ".");
                         alert3.show();
                         //Reload table post delete.

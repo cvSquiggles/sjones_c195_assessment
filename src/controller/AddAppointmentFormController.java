@@ -305,10 +305,16 @@ public class AddAppointmentFormController implements Initializable {
         String type = typeTextField.getText();
         String startDayFormat = "-"; //String to adjust startDayFormat, updated in the case that it's the 1st-9th
         String endDayFormat = "-"; //String to adjust endDayFormat, updated in the case that it's the 1st-9th
+        String startTimeFormat = "";
+        String endTimeFormat = "";
 
         //ensure month is double-digit for date/time formatter checks ahead as well as day
         if(startDatePicker.getValue().getDayOfMonth() < 10){
             startDayFormat = "-0";
+        }
+        //ensure hour is double digit value for date/time formatter checks
+        if(Integer.valueOf(hourChoiceBox.getSelectionModel().getSelectedItem().toString()) < 10){
+            startTimeFormat = "0";
         }
         if (startDatePicker.getValue().getMonthValue() < 10) {
             //Get start date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.
@@ -318,7 +324,7 @@ public class AddAppointmentFormController implements Initializable {
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-0" + startDatePicker.getValue().getMonthValue() +
-                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + startTimeFormat + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         } else{
@@ -329,7 +335,7 @@ public class AddAppointmentFormController implements Initializable {
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 startDateTime = (startDatePicker.getValue().getYear() + "-" + startDatePicker.getValue().getMonthValue() +
-                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        startDayFormat + startDatePicker.getValue().getDayOfMonth() + " " + startTimeFormat + hourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + minuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         }
@@ -337,6 +343,9 @@ public class AddAppointmentFormController implements Initializable {
         //ensure month is double value is double-digit for date/time formatter checks ahead
         if(endDatePicker.getValue().getDayOfMonth() < 10){
             endDayFormat = "-0";
+        }
+        if(Integer.valueOf(endHourChoiceBox.getSelectionModel().getSelectedItem().toString()) < 10){
+            endTimeFormat = "0";
         }
         if (endDatePicker.getValue().getMonthValue() < 10) {
             //Get end date/time stamp by breaking down the information populated in the ampm, minute, hour, and date selector form fields.
@@ -346,7 +355,7 @@ public class AddAppointmentFormController implements Initializable {
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 endDateTime = (endDatePicker.getValue().getYear() + "-0" + endDatePicker.getValue().getMonthValue() +
-                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endTimeFormat + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         } else {
@@ -356,7 +365,7 @@ public class AddAppointmentFormController implements Initializable {
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             } else {
                 endDateTime = (endDatePicker.getValue().getYear() + "-" + endDatePicker.getValue().getMonthValue() +
-                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
+                        endDayFormat + endDatePicker.getValue().getDayOfMonth() + " " + endTimeFormat + endHourChoiceBox.getSelectionModel().getSelectedItem().toString() +
                         ":" + endMinuteChoiceBox.getSelectionModel().getSelectedItem().toString() + ":00");
             }
         }
@@ -464,26 +473,29 @@ public class AddAppointmentFormController implements Initializable {
 
         int i = 0;
         while (i < appsToCheck.size()){
-            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle( rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText( rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("clients'") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
-            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("clients'") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
+                if ((start.isAfter(appsToCheck.get(i).getStartStamp()) || start.isEqual(appsToCheck.get(i).getStartStamp()))
+                        && (start.isBefore(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                            rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("customers") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
+                if ((end.isAfter(appsToCheck.get(i).getStartStamp()) && (end.isBefore(appsToCheck.get(i).getEndStamp()) || end.isEqual(appsToCheck.get(i).getEndStamp())))
+                        || (start.isBefore(appsToCheck.get(i).getStartStamp()) && end.isAfter(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("end") + " " +
+                            rb.getString("runs") + " " + rb.getString("through") + " "
+                            + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("customers") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
             i++;
         }
         //Code to check if a start or end time overlaps with a contacts other meetings.
@@ -502,28 +514,30 @@ public class AddAppointmentFormController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        i = 0;
         while (i < appsToCheck.size()){
-            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle( rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText( rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
-            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
+                if ((start.isAfter(appsToCheck.get(i).getStartStamp()) || start.isEqual(appsToCheck.get(i).getStartStamp()))
+                        && (start.isBefore(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                            rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
+                if ((end.isAfter(appsToCheck.get(i).getStartStamp()) && (end.isBefore(appsToCheck.get(i).getEndStamp()) || end.isEqual(appsToCheck.get(i).getEndStamp())))
+                        || (start.isBefore(appsToCheck.get(i).getStartStamp()) && end.isAfter(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("end") + " " +
+                            rb.getString("runs") + " " + rb.getString("through") + " "
+                            + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("contacts") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
             i++;
         }
         //Code to check if a start or end time overlaps with a users other meetings.
@@ -544,26 +558,29 @@ public class AddAppointmentFormController implements Initializable {
 
         i = 0;
         while (i < appsToCheck.size()){
-            if (start.isAfter(appsToCheck.get(i).getStartStamp()) && start.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle( rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText( rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("users") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
-            if (end.isAfter(appsToCheck.get(i).getStartStamp()) && end.isBefore(appsToCheck.get(i).getEndStamp())){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
-                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
-                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
-                        rb.getString("this") + " " + rb.getString("users") + " " + rb.getString("meetings") + " " +
-                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
-                alert.show();
-                return;
-            }
+                if ((start.isAfter(appsToCheck.get(i).getStartStamp()) || start.isEqual(appsToCheck.get(i).getStartStamp()))
+                        && (start.isBefore(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                            rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("users") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
+                if ((end.isAfter(appsToCheck.get(i).getStartStamp()) && (end.isBefore(appsToCheck.get(i).getEndStamp()) || end.isEqual(appsToCheck.get(i).getEndStamp())))
+                        || (start.isBefore(appsToCheck.get(i).getStartStamp()) && end.isAfter(appsToCheck.get(i).getEndStamp()))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                    alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("end") + " " +
+                            rb.getString("runs") + " " + rb.getString("through") + " "
+                            + rb.getString("another") + " " + rb.getString("of") + " " +
+                            rb.getString("this") + " " + rb.getString("users") + " " + rb.getString("meetings") + " " +
+                            rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                    alert.show();
+                    return;
+                }
             i++;
         }
         //After passing checks, run AppointmentsQuery.insert, and either load the AppointmentsViewForm, or display an error if the appointment wasn't created successfully.
