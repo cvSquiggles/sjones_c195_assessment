@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -57,7 +58,8 @@ public class LogInFormController implements Initializable {
         //Get currentUserData
         Users.homePageLoaded = false;
         Users.currentUserLocale = Locale.getDefault();
-        Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
+        //Users.currentUserZoneID = TimeZone.getDefault().toZoneId();
+        Users.currentUserZoneID = ZoneId.systemDefault();
         LocalDateTime localDateTime = LocalDateTime.now();
         ZonedDateTime zonedDateTime = localDateTime.atZone(Users.currentUserZoneID);
         Users.currentUserTimeZone = zonedDateTime.getOffset();

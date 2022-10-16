@@ -35,7 +35,7 @@ public class AddAppointmentFormController implements Initializable {
     public Button homeButton;
     public Button signOutButton;
     public DatePicker startDatePicker;
-    public ChoiceBox hourChoiceBox;
+    public ChoiceBox<Integer> hourChoiceBox;
     public ChoiceBox ampmChoiceBox;
     public ChoiceBox minuteChoiceBox;
     public ComboBox customerComboBox;
@@ -113,6 +113,7 @@ public class AddAppointmentFormController implements Initializable {
 
         //Populate start time choice boxes and highlight default values.
         int i = 1;
+        //hourChoiceBox.setItems(TimeManager.getTimes(8, ampmChoiceBox.getValue().toString()));
         while (i < 13) {
             hourChoiceBox.getItems().add(i);
             i++;
@@ -373,7 +374,7 @@ public class AddAppointmentFormController implements Initializable {
         //Query to verify date/times are valid within constraints
         //To learn TIME_DIFF/TIMESTAMPDIFF, referenced https://stackoverflow.com/questions/4759248/difference-between-two-dates-in-mysql and,
         //https://www.w3schools.com/sql/func_mysql_timediff.asp
-        String sql = "SELECT CONVERT_TZ(?, ?, '-5:00') as Start, CONVERT_TZ(?, ?, '-5:00') as End, TIMEDIFF(?, ?) as Diff, " +
+        String sql = "SELECT CONVERT_TZ(?, ?, '-4:00') as Start, CONVERT_TZ(?, ?, '-4:00') as End, TIMEDIFF(?, ?) as Diff, " +
                 "TIMESTAMPDIFF(SECOND, ?, ?) as DiffSeconds";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
 
@@ -401,13 +402,13 @@ public class AddAppointmentFormController implements Initializable {
         int diffInHours = Integer.parseInt(diff.substring((diff.indexOf(':') - 2), (diff.indexOf(':'))));
 
         //If start is after end, fail and alert user
-        if (diffSeconds < 0) {
+        if (diffSeconds <= 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle( rb.getString("Meeting") + " " + rb.getString("time") + " " +
                     rb.getString("logic") + " " + rb.getString("error"));
             alert.setContentText( rb.getString("Please") + " " + rb.getString("schedule") + " " + rb.getString("meeting") + " " +
                     rb.getString("to") + " " + rb.getString("end") + " " + rb.getString("after") + " " +
-                    rb.getString("it") + rb.getString("Starts") + ".");
+                    rb.getString("it") + " " + rb.getString("starts") + ".");
             alert.show();
             return;
         }
@@ -450,7 +451,52 @@ public class AddAppointmentFormController implements Initializable {
             alert.show();
             return;
         }
+        //Code to check if a start or end time overlaps with other meetings.
+        ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start = LocalDateTime.parse(startDateTime, formatter);
+        LocalDateTime end = LocalDateTime.parse(endDateTime, formatter);
+        //Query for the selected customer's meetings already in the database, then compare them against the new meetings date/times.
+        try {
+            ResultSet rs2 = AppointmentsQuery.selectByTime(Users.currentUserTimeZone.toString());
+            while(rs2.next()){
+                Appointments appToAdd = new Appointments(rs2.getInt("Appointment_ID"), rs2.getString("Title"), rs2.getString("Description"),
+                        rs2.getString("Location"), rs2.getString("Contact_Name"), rs2.getString("Type"), rs2.getString ("Created_By"),
+                        rs2.getString("Start"), rs2.getString("End"), rs2.getInt("Customer_ID"), rs2.getInt("User_ID"),
+                        rs2.getInt("Contact_ID"), rs2.getString("Customer_Name"));
 
+                appsToCheck.add(appToAdd);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        int i = 0;
+        while (i < appsToCheck.size()){
+            if ((start.isAfter(appsToCheck.get(i).getStartStamp()) || start.isEqual(appsToCheck.get(i).getStartStamp()))
+                    && (start.isBefore(appsToCheck.get(i).getEndStamp()))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("starts") + " " +
+                        rb.getString("during") + " " + rb.getString("another") + " " + rb.getString("meeting") + " " +
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            if ((end.isAfter(appsToCheck.get(i).getStartStamp()) && (end.isBefore(appsToCheck.get(i).getEndStamp()) || end.isEqual(appsToCheck.get(i).getEndStamp())))
+                    || (start.isBefore(appsToCheck.get(i).getStartStamp()) && end.isAfter(appsToCheck.get(i).getEndStamp()))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(rb.getString("Meeting") + " " + rb.getString("conflict"));
+                alert.setContentText(rb.getString("This") + " " + rb.getString("meeting") + " " + rb.getString("end") + " " +
+                        rb.getString("runs") + " " + rb.getString("through") + " "
+                        + rb.getString("another") + rb.getString("meeting") + " " +
+                        rb.getString("titled") + " " + appsToCheck.get(i).getTitle() + "!");
+                alert.show();
+                return;
+            }
+            i++;
+        }
+        /**
         //Code to check if a start or end time overlaps with a customers other meetings.
         ObservableList<Appointments> appsToCheck = FXCollections.observableArrayList();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -583,6 +629,7 @@ public class AddAppointmentFormController implements Initializable {
                 }
             i++;
         }
+         **/
         //After passing checks, run AppointmentsQuery.insert, and either load the AppointmentsViewForm, or display an error if the appointment wasn't created successfully.
         if (AppointmentsQuery.insert(title, desc, loc,type, startDateTime, endDateTime, timeZoneOffset, Users.currentUser.getUserName(), customerID,
                 assignedUserID, contactID) != 0){

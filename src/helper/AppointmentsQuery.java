@@ -277,10 +277,31 @@ public class AppointmentsQuery {
     }
 
     /**
-     * Queries the database for appointments for the passed in Customer
-     * @param customer_id the ID of the customer that is being searched for
+     * Queries the database for appointments and returns them after handling time zone conversion for the users' timezone
      * @param timeZone the current users' time zone offset
-     * @return a ResultSet with all of the specified customers' appointments in the database
+     * @return a ResultSet with all the appointments in the database after handling time zone conversion for the users' timezone
+     * @throws SQLException
+     */
+    public static ResultSet selectByTime(String timeZone) throws SQLException {
+        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
+                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
+                "FROM appointments as a " +
+                "JOIN Users as u on a.User_ID = u.User_ID " +
+                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
+                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID";
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+
+        ps.setString(1, timeZone);
+        ps.setString(2, timeZone);
+
+        return ps.executeQuery();
+    }
+
+    /**
+     *
+     * @param customer_id ID of the customer to search for
+     * @param timeZone time zone of the current user
+     * @return A list of the appointments in the system for the current user
      * @throws SQLException
      */
     public static ResultSet selectByCustomer(int customer_id, String timeZone) throws SQLException {
@@ -295,52 +316,6 @@ public class AppointmentsQuery {
         ps.setString(1, timeZone);
         ps.setString(2, timeZone);
         ps.setInt(3, customer_id);
-
-        return ps.executeQuery();
-    }
-
-    /**
-     * Queries the database for appointments for the passed in User
-     * @param user_id the ID of the user that is being searched for
-     * @param timeZone the current users' time zone offset
-     * @return a ResultSet with all the specified users' appointments in the database
-     * @throws SQLException
-     */
-    public static ResultSet selectByUser(int user_id, String timeZone) throws SQLException {
-        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
-                "FROM appointments as a " +
-                "JOIN Users as u on a.User_ID = u.User_ID " +
-                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
-                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID  WHERE a.User_ID = ?";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-
-        ps.setString(1, timeZone);
-        ps.setString(2, timeZone);
-        ps.setInt(3, user_id);
-
-        return ps.executeQuery();
-    }
-
-    /**
-     *
-     * @param contact_id the ID of the contact that is being searched for
-     * @param timeZone the current users' time zone offset
-     * @return a ResultSet with all the specified contacts' appointments in the database
-     * @throws SQLException
-     */
-    public static ResultSet selectByContact(int contact_id, String timeZone) throws SQLException {
-        String sql = "SELECT a.Appointment_ID, a.Title, a.Description, a.Location, a.Type, a.Create_Date, " +
-                "CONVERT_TZ(a.Start, '+00:00', ?) as Start, CONVERT_TZ(a.End, '+00:00', ?) as End, a.Created_By, a.Last_Update, a.Last_Updated_By, cu.Customer_Name, u.User_Name, u.User_ID, co.Contact_Name, cu.Customer_ID, co.Contact_ID " +
-                "FROM appointments as a " +
-                "JOIN Users as u on a.User_ID = u.User_ID " +
-                "JOIN Customers as cu on a.Customer_ID = cu.Customer_ID " +
-                "JOIN Contacts as co on a.Contact_ID = co.Contact_ID  WHERE a.Contact_ID = ?";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-
-        ps.setString(1, timeZone);
-        ps.setString(2, timeZone);
-        ps.setInt(3, contact_id);
 
         return ps.executeQuery();
     }
